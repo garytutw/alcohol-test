@@ -1,0 +1,11 @@
+!!! Strict
+%html
+  %head
+    %meta{ :content => "text/html;charset=utf-8", :"http-equiv" => "Content-Type" }
+    %meta{ :content => "zh-tw", :"http-equiv" => "Content-Language" }
+    %title= "#{@title}"
+
+  %body
+    #header
+      %h1= @title
+    #content= yield
