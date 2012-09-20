@@ -1,8 +1,10 @@
 # Start the development server
-#   > bundle exec rake dev:start
+#   > rake dev:start
 # 
 # Start the production server
-#   > bundle exec rake live:start
+#   > rake live:start
 
-require './bootstrap'
+$LOAD_PATH.unshift(File.expand_path("../lib", __FILE__))
+
+require 'app/bootstrap'
 run Application 
