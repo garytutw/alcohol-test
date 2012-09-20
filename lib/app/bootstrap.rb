@@ -12,6 +12,7 @@ Dir["#{root_dir}/helpers/*.rb"].each {|f| require_relative f}
 
 # Models
 Dir["#{root_dir}/models/*.rb"].each {|f| require_relative f}
+DataMapper.finalize
 
 # Routes
 Dir["#{root_dir}/routes/*.rb"].each {|f| require_relative f}
