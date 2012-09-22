@@ -1,11 +1,46 @@
-!!! Strict
+!!!
 %html
   %head
-    %meta{ :content => "text/html;charset=utf-8", :"http-equiv" => "Content-Type" }
-    %meta{ :content => "zh-tw", :"http-equiv" => "Content-Language" }
-    %title= "#{@title}"
-
+    %meta{:charset => "utf-8"}
+      %meta{:content => "Alcohol Recording System", :name => "Description"}
+        %meta{:content => "Huah Chi, Inc.", :name => "author"}
+          %meta{:content => "Copyright (c) 2011 Huah Chi Co., LD., all rights reserved.", :name => "Copyright"}
+            %title Alcohol Recording System
+            %link{:href => "css/default.css", :rel => "stylesheet"}/
+            /[if IE]
+              <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   %body
-    #header
-      %h1= @title
-    #content= yield
+    %section#mainRight.clear
+      %header
+        %h1
+          %span
+            %b 酒精測試系統&nbsp;&nbsp;
+            - if current_user
+              Hi, #{current_user.name}
+              %a{:href => "/logout"}
+                登出
+          %span
+      %nav
+        %ul
+          %li
+            %a.selected{:href => "/"} 全省日報表
+          %li
+            %a{:href => "/site"} 分站測試記錄
+          %li
+            %a{:href => "/manager"} 管理者
+    = yield
+    %footer
+      %p c 2011 Huah Chi Co., LD., all rights reserved.
+      %ul
+        %li
+          %a{:href => "index.html"} Home
+        %li
+          %a{:href => "about.html"} About
+        %li
+          %a{:href => "contact.html"} Contact
+    / end mainRight
+    #logoTxt
+      %h1
+        %span
+      %h2
+        %span

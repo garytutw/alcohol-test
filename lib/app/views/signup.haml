@@ -1,0 +1,32 @@
+%div
+  %div= flash[:notice]
+  %h1.page_title 新增使用者
+  %form{:action => "/signup", :method => "post"}
+    .field
+      .label
+        %label{:for => "user_id"} 員工序號
+      %input{ :id => "user_id", :name => "user[id]", :size => 30, :type => "text" }
+    .field
+      .label
+        %label{:for => "user_name"} 員工姓名
+      %input{ :id => "user_name", :name => "user[name]", :size => 30, :type => "text" }
+    .field
+      .label
+        %label{:for => "user_password"} 密碼
+      %input{ :id => "user_password", :name => "user[password]", :size => 30, :type => "password" }
+    .field
+      .label
+        %label{:for => "user_password_confirmation"} 密碼確認
+      %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 30, :type => "password" }
+    .field
+      .label
+        %label{:for => "user_permission_level"} 系統權限
+      %select{:name => "user[permission_level]"}
+        %option{:value => -1, :selected => true} 系統管理者
+        %option{:value => 1, :selected => false} 分站主管
+        %option{:value => 2, :selected => false} 登錄人員
+    %br
+    .buttons
+      %input{ :value => "新增使用者", :type => "submit"}
+      / %a{:href => "/login", :class => 'sinatra_authentication_link'}
+      /  Login

@@ -1,0 +1,14 @@
+%div
+  %div= flash[:notice]
+  %h1.page_title 登入
+  %form{:action => "/login", :method => "post"}
+    .field
+      .label
+        %label{:for => "user_id'"} 員工序號
+      %input{:id => "user_id", :name => "id", :size => 10, :type => "text"}
+    .field
+      .label
+        %label{:for => "user_password"} 密碼
+      %input{:id => "user_password", :name => "password", :size => 12, :type => "password"}
+    .buttons
+      %input{:value => "登入", :type => "submit"}
