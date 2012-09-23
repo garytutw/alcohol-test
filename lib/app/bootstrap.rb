@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
 Bundler.require
-require_relative './models.rb'
+require_relative './models/init.rb'
 
 def root_dir
   File.dirname(__FILE__)
@@ -23,6 +23,7 @@ class Application < Sinatra::Base
   # http://www.sinatrarb.com/configuration.html
   enable :sessions
   set :root, "#{root_dir}"
+  use Rack::Session::Cookie, :secret => 'superdupersecret'
   helpers Helpers
 
 end

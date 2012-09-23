@@ -1,6 +1,6 @@
 
 namespace :db do
-  require_relative '../app/models.rb'
+  require_relative '../app/models/init'
   desc 'Auto-migrate the database (destroy data)'
   task :migrate do
     puts 'Bootstrapping database (destroy data)'

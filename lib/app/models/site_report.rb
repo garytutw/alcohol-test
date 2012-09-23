@@ -15,8 +15,8 @@ class SiteReport
   property :created_at, DateTime
   property :updated_at, DateTime
 
-  belongs_to :operator, :model => DmUser, :required => false
-  belongs_to :auditor, :model => DmUser, :required => false
+  belongs_to :operator, :model => User, :required => false
+  belongs_to :auditor, :model => User, :required => false
   has n, :site_report_logs
 end
 

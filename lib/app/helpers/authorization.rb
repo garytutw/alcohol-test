@@ -1,6 +1,4 @@
-helpers do
-  include Rack::Utils
-  alias_method :h, :escape_html
+module Helpers
   
   # Convert a hash to a querystring for form population
   def hash_to_query_string(hash)

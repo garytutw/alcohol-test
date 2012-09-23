@@ -1,10 +1,3 @@
-require "data_mapper"
-require "bcrypt"
-require "securerandom"
-
-DataMapper::Logger.new($stdout, :debug)
-#DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/db/auth.sqlite")
-DataMapper.setup(:default, "mysql://root:cow3xiao@localhost/test")
 
 class User 
   include DataMapper::Resource
@@ -38,5 +31,3 @@ class User
 
 end
 
-DataMapper.finalize
-DataMapper.auto_upgrade!
