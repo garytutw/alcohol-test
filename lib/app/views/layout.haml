@@ -20,14 +20,26 @@
               %a{:href => "/logout"}
                 登出
           %span
-      %nav
-        %ul
-          %li
-            %a.selected{:href => "/"} 全省日報表
-          %li
-            %a{:href => "/site"} 分站測試記錄
-          %li
-            %a{:href => "/manager"} 管理者
+      - if request.path.starts_with? '/manager'
+        %nav
+          %ul
+            %li
+              %a.selected{:href => "/manager/signup"} 新增使用者
+            %li
+              %a{:href => "/manager"} 編輯使用者資訊
+            %li
+              %a{:href => "/manager"} 新增分站
+            %li
+              %a{:href => "/manager"} 編輯分站資訊
+      - else             
+        %nav
+          %ul
+            %li
+              %a.selected{:href => "/"} 全省日報表
+            %li
+              %a{:href => "/site"} 分站測試記錄
+            %li
+              %a{:href => "/manager"} 管理者
     = yield
     %footer
       %p c 2011 Huah Chi Co., LD., all rights reserved.

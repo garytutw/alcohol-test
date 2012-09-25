@@ -1,3 +1,4 @@
+require 'bcrypt'
 
 class Application
   get "/" do
@@ -5,16 +6,19 @@ class Application
     haml :index
   end
 
-  get "/signup" do
+  get "/manager/signup" do
+  	@sites = Site.all
     haml :signup
   end
 
-  post "/signup" do
+  post "/manager/signup" do
     user = User.create(params[:user])
+    mySite = Site.first params[:site]
+    user.site = mySite
     user.password_salt = BCrypt::Engine.generate_salt
     user.password_hash = BCrypt::Engine.hash_secret(params[:user][:password], user.password_salt)
     if user.save
-      flash[:info] = "Thank you for registering #{user.name}" 
+      # flash[:info] = "Thank you for registering #{user.name}" 
       session[:user] = user.token
       redirect "/" 
     else
@@ -39,11 +43,11 @@ class Application
         response.set_cookie "user", {:value => user.token, :expires => (Time.now + 52*7*24*60*60)} if params[:remember_me]
         redirect_last
       else
-        flash[:error] = "ID/Password combination does not match"
+        # flash[:error] = "ID/Password combination does not match"
         redirect "/login?id=#{params[:id]}"
       end
     else
-      flash[:error] = "That serial ID is not recognised"
+      # flash[:error] = "That serial ID is not recognised"
       redirect "/login?id=#{params[:id]}"
     end
   end
@@ -53,11 +57,15 @@ class Application
       @current_user.generate_token
       response.delete_cookie "user"
       session[:user] = nil
-      flash[:info] = "Successfully logged out"
-      redirect "/"
+      # flash[:info] = "Successfully logged out"
     end
     redirect "/login"
   end
+  
+  get "/manager" do
+    haml :home
+  end
+  
   #=============== testing only ===================
   get "/secret" do
     login_required

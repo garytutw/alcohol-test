@@ -10,7 +10,7 @@ class User
   property :created_at, DateTime
   property :token, String
   property :permission_level, Integer, :default => 1
-  
+  belongs_to :site, :required => false
   
   validates_presence_of         :password
   validates_presence_of         :password_confirmation
