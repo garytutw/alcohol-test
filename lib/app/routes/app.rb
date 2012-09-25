@@ -1,17 +1,29 @@
 require 'bcrypt'
 
 class Application
+	# define ACL routing condition
+	set(:auth) do |*roles|   # <- notice the splat here
+	  condition do
+	   	unless logged_in? && roles.any? {|role| current_user.in_role? role }
+	     	redirect "/login", 303
+	   	end
+	  end
+	end
+	
   get "/" do
-    #all_users
     haml :index
   end
-
-  get "/manager/signup" do
+	
+	get "/manager", :auth => :admin do
+    haml :home
+  end
+  
+  get "/manager/signup", :auth => :admin do
   	@sites = Site.all
     haml :signup
   end
 
-  post "/manager/signup" do
+  post "/manager/signup", :auth => :admin do
     user = User.create(params[:user])
     mySite = Site.first params[:site]
     user.site = mySite
@@ -23,8 +35,8 @@ class Application
       redirect "/" 
     else
       session[:errors] = user.errors.full_messages
-      puts "error: ${user.errors.full_messages}"
-      redirect "/signup?" + hash_to_query_string(params[:user])
+      puts ">>>>>> #{session[:errors]}"
+      redirect "/manager/signup?" + hash_to_query_string(params[:user])
     end
   end
 
@@ -62,7 +74,8 @@ class Application
     redirect "/login"
   end
   
-  get "/manager" do
+  # for site reporting
+  get "/site", :auth => [:user, :manager, :admin] do
     haml :home
   end
   

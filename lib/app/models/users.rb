@@ -9,7 +9,7 @@ class User
   property :password_salt,  Text
   property :created_at, DateTime
   property :token, String
-  property :permission_level, Integer, :default => 1
+  property :permission_level, Integer, :default => 2
   belongs_to :site, :required => false
   
   validates_presence_of         :password
@@ -27,6 +27,20 @@ class User
 
   def admin?
     self.permission_level == -1
+  end
+  
+  # check if (ACL) auth role is correct
+  def in_role? role
+    case role
+    when :admin
+    	return admin?
+    when :user
+    	return self.permission_level == 2
+    when :manager
+    	return self.permission_level == 1
+    else
+    	return false
+  	end
   end
 
 end
