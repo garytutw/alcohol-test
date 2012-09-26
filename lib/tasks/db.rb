@@ -29,9 +29,13 @@ namespace :db do
     end
     insert_csv('test/data1.csv', -24*60*60)
     insert_csv('test/data2.csv', -24*60*60*2)    
+    i = 1
     Site.all.each do |s|
       s.update_report(Date.today - 1)
       s.update_report(Date.today - 2)
+      s.seq = i
+      i += 1
+      s.save
     end
   end
 end

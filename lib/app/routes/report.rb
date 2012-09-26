@@ -1,9 +1,10 @@
+
 class Application
-  get '/report/:site/:date' do
-
-    @site = Site.first(:name => params[:site])
+  get '/report/:date' do
     @date = Date.strptime(params[:date], '%Y-%m-%d')
-    @report = SiteReport.first(:site => @site, :date => @date)
-
+    @reports = SiteReport.all(:date => @date,
+      :order => [SiteReport.site.seq.asc],
+      :links => [SiteReport.relationships[:site].inverse])
+    show :report
   end
 end

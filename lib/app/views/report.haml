@@ -1,0 +1,59 @@
+%section.columns.clear
+  %div
+    %div
+      %h2
+        %span 統聯酒測日報表 #{@date}
+    %table{:border => "1", :cellpadding => "2", :cellspacing => "2", :style => "background-color: #ffffff;", :width => "100%"}
+      %tr{:valign => "top"}
+        %th{:width => "35"}
+          %span No.
+        %th{:width => "126"}
+          %span 站名
+        %th{:width => "126"}
+          %span 登錄人姓名
+        %th{:width => "126"}
+          %span 測試總次數
+        %th{:width => "126"}
+          %span 測試總駕駛員數
+        %th{:width => "126"}
+          %span 總班次數
+        %th{:width => "126"}
+          %span 調度士測試次數
+        %th{:width => "126"}
+          %span 見習/抽班/重覆
+        %th{:width => "126"}
+          %span 異常次數 
+        %th{:width => "126"}
+          %span 主管姓名
+        %th{:width => "126"}
+          %span 主管覆核
+        %th{:width => "126"}
+          %span 更新
+      - @reports.each do |r|
+        %tr{:valign => "top"}
+          %td
+            %span #{r.site.seq}
+          %td
+            %span #{r.site.name}
+          %td
+            %span= r.operator.nil? ? '' : r.operator.name
+          %td
+            %span #{r.total_tests}
+          %td
+            %span #{r.total_drivers}
+          %td
+            %span 
+          %td
+            %span 
+          %td
+            %span #{r.trainees}/#{r.pumpings}/#{r.repeats}
+          %td
+            %span #{r.anomaly_tests}
+          %td
+            %span= r.auditor.nil? ? '' : r.auditor.name
+          %td
+            %span= r.auditor.nil? ? 'Not yet' :'正確無誤 (Correct)'
+          %td
+            %span  
+              %a{:href => "/summary/#{r.site.name}/#{@date}"} 更新
+
