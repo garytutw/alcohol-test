@@ -1,5 +1,5 @@
 module Helpers
-  
+
   # Convert a hash to a querystring for form population
   def hash_to_query_string(hash)
     hash.delete "password"

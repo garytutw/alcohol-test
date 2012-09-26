@@ -1,6 +1,7 @@
 require 'bcrypt'
 
 class Application
+
 	# define ACL routing condition
 	set(:auth) do |*roles|   # <- notice the splat here
 	  condition do
@@ -10,7 +11,7 @@ class Application
 	  end
 	end
 	
-  get "/" do
+  get "/" do     
     haml :index
   end
 	
@@ -30,12 +31,12 @@ class Application
     user.password_salt = BCrypt::Engine.generate_salt
     user.password_hash = BCrypt::Engine.hash_secret(params[:user][:password], user.password_salt)
     if user.save
-      # flash[:info] = "Thank you for registering #{user.name}" 
+      flash[:info] = "Thank you for registering #{user.name}" 
       session[:user] = user.token
       redirect "/" 
     else
+    	flash[:error] = user.errors.full_messages    
       session[:errors] = user.errors.full_messages
-      puts ">>>>>> #{session[:errors]}"
       redirect "/manager/signup?" + hash_to_query_string(params[:user])
     end
   end
@@ -55,11 +56,11 @@ class Application
         response.set_cookie "user", {:value => user.token, :expires => (Time.now + 52*7*24*60*60)} if params[:remember_me]
         redirect_last
       else
-        # flash[:error] = "ID/Password combination does not match"
+        flash[:error] = "ID/Password combination does not match"
         redirect "/login?id=#{params[:id]}"
       end
     else
-      # flash[:error] = "That serial ID is not recognised"
+      flash[:error] = "That serial ID is not recognised"
       redirect "/login?id=#{params[:id]}"
     end
   end

@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
+require 'sinatra/flash' 
 Bundler.require
 
 # Models
@@ -14,7 +15,7 @@ require_relative 'alcohol_test'
 DataMapper.finalize
 
 class Application < Sinatra::Base
-
+	register Sinatra::Flash
   puts ">> Running in #{settings.environment} environment"
 
   configure :development do

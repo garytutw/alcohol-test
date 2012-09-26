@@ -40,6 +40,10 @@
               %a{:href => "/site"} 分站測試記錄
             %li
               %a{:href => "/manager"} 管理者
+      - [:notice, :warning, :error].each do |name|
+        - if flash.has_key?(name)
+          %h3{:id => name, :class => name} #{flash[name]}
+
     = yield
     %footer
       %p c 2011 Huah Chi Co., LD., all rights reserved.
