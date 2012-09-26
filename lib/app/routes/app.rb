@@ -2,15 +2,6 @@ require 'bcrypt'
 
 class Application
 
-	# define ACL routing condition
-	set(:auth) do |*roles|   # <- notice the splat here
-	  condition do
-	   	unless logged_in? && roles.any? {|role| current_user.in_role? role }
-	     	redirect "/login", 303
-	   	end
-	  end
-	end
-	
   get "/" do     
     haml :index
   end
@@ -76,7 +67,7 @@ class Application
   end
   
   # for site reporting
-  get "/site", :auth => [:user, :manager, :admin] do
+  get "/site", :auth => [:user, :manager] do
     haml :home
   end
   

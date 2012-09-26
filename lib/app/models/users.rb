@@ -38,6 +38,8 @@ class User
     	return self.permission_level == 2
     when :manager
     	return self.permission_level == 1
+    when :auditor                      
+    	return self.permission_level == 0
     else
     	return false
   	end
