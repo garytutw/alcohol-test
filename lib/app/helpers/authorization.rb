@@ -4,7 +4,12 @@ module Helpers
   def hash_to_query_string(hash)
     hash.delete "password"
     hash.delete "password_confirmation"
-    hash.collect {|k,v| "#{k}=#{v}"}.join("&")
+    hash.delete "site"
+    hash.collect {|k,v|
+    	if v != ""
+    	  "#{k}=#{v}"
+    	end	
+    }.join("&")
   end
 
   # Redirect to last page or root

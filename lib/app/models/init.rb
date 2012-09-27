@@ -15,16 +15,6 @@ require_relative 'alcohol_test'
 DataMapper.finalize
 
 class Application < Sinatra::Base
-	register Sinatra::Flash
-	
-	# define ACL routing condition
-	set(:auth) do |*roles|   # <- notice the splat here
-	  condition do
-	   	unless logged_in? && roles.any? {|role| current_user.in_role? role }
-	     	redirect "/login", 303
-	   	end
-	  end
-	end
 	
   puts ">> Running in #{settings.environment} environment"
 

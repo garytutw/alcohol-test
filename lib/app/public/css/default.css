@@ -211,14 +211,14 @@ a:focus {
 	text-decoration: underline !important;
 }
 
-.error, .info {
+.error, .notice, .warning {
   margin: 0.3em 0;
   padding: 5px 7px;
   text-align: center;
   color: #fff;
 }
 
-.info {
+.notice {
   background: #00A8FF;
 }
 
@@ -233,8 +233,8 @@ a:focus {
   font-weight: bold;
 }
 
-.highlight {
-  background: #ffc;
+.warning {
+  background: #66FF33;
   padding: 10px;
   margin-bottom: 10px;
 }

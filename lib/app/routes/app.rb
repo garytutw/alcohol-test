@@ -11,14 +11,17 @@ class Application
   end
   
   get "/manager/signup", :auth => :admin do
-  	@sites = Site.all
-    haml :signup
+  	@sites ||= Site.all if @site.nil?
+  	if params.empty?
+    	haml :signup
+    else # redirect from signup POST
+    	haml :signup, :locals => params
+  	end	
   end
 
   post "/manager/signup", :auth => :admin do
+  	params[:user]["site"] = Site.first(params[:user][:site])
     user = User.create(params[:user])
-    mySite = Site.first params[:site]
-    user.site = mySite
     user.password_salt = BCrypt::Engine.generate_salt
     user.password_hash = BCrypt::Engine.hash_secret(params[:user][:password], user.password_salt)
     if user.save
@@ -33,7 +36,7 @@ class Application
   end
 
   get "/login" do
-    if current_user
+    if current_user && session[:redirect_to] != '/manager'
       redirect_last
     else
       haml :login
@@ -61,7 +64,8 @@ class Application
       @current_user.generate_token
       response.delete_cookie "user"
       session[:user] = nil
-      # flash[:info] = "Successfully logged out"
+      session[:redirect_to] = nil
+      flash[:notie] = "Successfully logged out"
     end
     redirect "/login"
   end
