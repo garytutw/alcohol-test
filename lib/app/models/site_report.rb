@@ -6,8 +6,7 @@ class SiteReport
   belongs_to :site, :key => true
 
   property :total_tests, Integer
-  property :total_drivers, Integer
-  property :total_cars, Integer, :default => 0, :required => false
+  property :operator_tests, Integer, :default => 0, :required => false
   property :trainees, Integer, :default => 0, :required => false
   property :pumpings, Integer, :default => 0, :required => false
   property :repeats, Integer, :default => 0, :required => false
@@ -15,7 +14,7 @@ class SiteReport
   property :created_at, DateTime
   property :updated_at, DateTime
 
-  belongs_to :operator, :model => User, :required => false
+  belongs_to :inputter, :model => User, :required => false
   belongs_to :auditor, :model => User, :required => false
   has n, :site_report_logs
 end

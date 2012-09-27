@@ -12,19 +12,14 @@ class Site
   def update_report(date= Date.today - 1)
     dt_upper = ((date + 1).to_time - 1).to_datetime
     dt_lower = date.to_time.to_datetime
-    total_tests, total_drivers = 0, 0
-    AlcoholTest.aggregate(:driver_id, :value.count, :site => self,
-                          :time => dt_lower..dt_upper).each {|id, count|
-      total_tests += count;
-      total_drivers += 1;
-    }
+    total_tests = AlcoholTest.count(:site => self, :time => dt_lower..dt_upper)
     anomaly_tests = AlcoholTest.count(:site => self, :time => dt_lower..dt_upper,
                                       :value.gt => AlcoholTest::ANOMALY_BOUND)
     sr = site_reports.first(:date => date)
     if sr.nil?
       srl = SiteReportLog.new(:log => "Created by [user:system]")
       sr = SiteReport.new(:date => date, :site => self, :total_tests => total_tests,
-                          :total_drivers => total_drivers, :anomaly_tests => anomaly_tests)
+                          :anomaly_tests => anomaly_tests)
       srl.save
       sr.save
     else

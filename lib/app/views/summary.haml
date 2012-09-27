@@ -1,0 +1,62 @@
+:javascript
+  $(function() {
+    $("input.updatable").keyup(function() {
+      $(".buttons input").attr("disabled", "disabled");
+      // check if integer
+      if (Number(this.value) != this.value) {
+        alert("Not integer");
+        return;
+      }
+      var dirty = false;
+      $("input.updatable").each(function() {
+        if ($(this).attr("ovalue") != $(this).attr("value")) {
+          dirty = true;
+          return false;
+        }
+      });
+      if (dirty)
+        $(".buttons input").removeAttr("disabled");
+      else
+        $(".buttons input").attr("disabled", "disabled");
+    });
+  });
+%div
+  %div
+    %h1.page_title= "統聯酒測日報表 - #{@site} - #{@date}"
+    %form{:action => "/summary/#{@site}/#{@date}", :method => "post"}
+      .field
+        %label{:for => "status"} 狀態
+        %input{:id => "status", :name => "summary[status]", :size => 30, :type => "text",
+               :ovalue => @status, :value => @status_text, :disabled => "disabled"}
+      .field
+        %label{:for => "total_tests"} 受測總人數
+        %input{:id => "total_tests", :name => "summary[total_tests]", :size => 30, :type => "text",
+               :value => @summary.total_tests, :disabled => "disabled"}
+      .field
+        %label{:for => "total_cars"} 總班次數
+        %input{:id => "total_cars", :name => "summary[total_cars]", :size => 30, :type => "text",
+               :value => @status == 0 ? "N/A" : @summary.total_tests - @summary.opertor_tests, :disabled => "disabled"}
+      .field
+        %label{:for => "anomaly_tests"} 異常次數
+        %input{:id => "anomaly_tests", :name => "summary[anomaly_tests]", :size => 30, :type => "text",
+               :value => @summary.anomaly_tests, :disabled => "disabled"}
+      - [{:id => "operator_tests", :value => @summary.operator_tests, :label => "調度測試"},
+         {:id => "trainees", :value => @summary.trainees, :label => "見習"},
+         {:id => "pumpings", :value => @summary.pumpings, :label => "抽班"},
+         {:id => "repeats", :value => @summary.repeats, :label => "重覆"}].each do |f|
+        .field
+          %label{:for => f[:id]}= f[:label]
+          %input.updatable{:id => f[:id], :name => "summary[#{f[:id]}]", :size => 30, :type => "text",
+            :value => f[:value], :ovalue => f[:value]}
+      .field
+        %label{:for => "inputter"} 登陸人姓名
+        %input{:id => "inputter", :name => "summary[inputter]", :size => 30, :type => "text",
+               :value => @summary.inputter.nil? ? "" : @summary.inputter.name}
+      .field
+        %label{:for => "auditor"} 主管姓名
+        %input{:id => "auditor", :name => "summary[auditor]", :size => 30, :type => "text",
+               :value => @summary.auditor.nil? ? "" : @summary.auditor.name}
+    %br
+    .buttons
+      %input{ :value => @submit_text, :type => "submit", :disabled => "disabled"}
+
