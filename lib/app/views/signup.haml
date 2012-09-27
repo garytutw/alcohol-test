@@ -5,11 +5,11 @@
     .field
       .label
         %label{:for => "user_id"} 員工序號
-      %input{ :id => "user_id", :name => "user[id]", :size => 30, :type => "text" }
+      %input{ :id => "user_id", :name => "user[id]", :size => 30, :type => "text", :value => locals["id"]}
     .field
       .label
         %label{:for => "user_name"} 員工姓名
-      %input{ :id => "user_name", :name => "user[name]", :size => 30, :type => "text" }
+      %input{ :id => "user_name", :name => "user[name]", :size => 30, :type => "text", :value => locals["name"]}
     .field
       .label
         %label{:for => "user_password"} 密碼
@@ -21,7 +21,7 @@
     .field
       .label
         %label{:for => "user_site"} 所屬分站
-      %select{:name => "site[id]"}
+      %select{:name => "user[site]"}
         - @sites.each do |site|  
           %option{:value => site.id} #{site.name}
         
@@ -29,10 +29,10 @@
       .label
         %label{:for => "user_permission_level"} 系統權限
       %select{:name => "user[permission_level]"}
-        %option{:value => -1, :selected => false} 系統管理者
-        %option{:value => 0, :selected => false} 稽核人員
-        %option{:value => 1, :selected => false} 分站主管
-        %option{:value => 2, :selected => true} 登錄人員
+        %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
+        %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 稽核人員
+        %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
+        %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
     .buttons
       %input{ :value => "新增使用者", :type => "submit"}
