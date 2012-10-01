@@ -1,28 +1,29 @@
-:javascript
-  $(function() {
-    $("input.updatable").keyup(function() {
-      $(".buttons input").attr("disabled", "disabled");
-      // check if integer
-      if (Number(this.value) != this.value) {
-      //  alert("Not integer");
-      //  return;
-      }
-      var dirty = false;
-      $("input.updatable").each(function() {
-        if ($(this).attr("ovalue") != $(this).attr("value")) {
-          dirty = true;
-          return false;
-        }
-      });
-      if (dirty)
-        $(".buttons input").removeAttr("disabled");
-      else
+- if !current_user.in_role? :auditor or @site_report.status == 2
+  :javascript
+    $(function() {
+      $("input.updatable").keyup(function() {
         $(".buttons input").attr("disabled", "disabled");
+        // check if integer
+        if (Number(this.value) != this.value) {
+        //  alert("Not integer");
+        //  return;
+        }
+        var dirty = false;
+        $("input.updatable").each(function() {
+          if ($(this).attr("ovalue") != $(this).attr("value")) {
+            dirty = true;
+            return false;
+          }
+        });
+        if (dirty)
+          $(".buttons input").removeAttr("disabled");
+        else
+          $(".buttons input").attr("disabled", "disabled");
+      });
     });
-  });
 %div
   %div
-    %h1.page_title= "統聯酒測日報表 - #{@site} - #{@date}"
+    %h1.page_title= "統聯酒測日報表 - #{@site_name} - #{@date}"
     - if @errors and @errors.size
       .errors
         - @errors.each do |k,v|
@@ -66,5 +67,8 @@
                :value => @site_report.auditor_name, :disabled => "disabled"}
       %br
         .buttons
-          %input{ :value => @submit_text, :type => "submit", :disabled => "disabled"}
+          - if !current_user.in_role? :auditor or @site_report.status == 2
+            %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
+          - else
+            %input{ :value => "核覆", :type => "submit"}
 

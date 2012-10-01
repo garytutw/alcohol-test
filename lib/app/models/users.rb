@@ -1,3 +1,4 @@
+require 'bcrypt'
 
 class User 
   include DataMapper::Resource
@@ -40,11 +41,11 @@ class User
     case role
     when :admin
     	return admin?
-    when :user
+    when :operator
     	return self.permission_level == 2
-    when :manager
+    when :auditor
     	return self.permission_level == 1
-    when :auditor                      
+    when :hq                      
     	return self.permission_level == 0
     else
     	return false

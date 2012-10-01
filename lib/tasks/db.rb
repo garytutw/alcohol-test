@@ -37,6 +37,25 @@ namespace :db do
       i += 1
       s.save
     end
+    # admin user
+    User.create(:id => 'admin', :name => 'admin',
+                :password => 'admin', :password_confirmation => 'admin',
+                :permission_level => -1).save
+    User.create(:id => 'hq', :name => 'hq',
+                :password => '1234', :password_confirmation => '1234',
+                :permission_level => 0).save
+    User.create(:id => 'site1', :name => 'site1',
+                :password => '1234', :password_confirmation => '1234',
+                :permission_level => 1, :site_id => 1).save
+    User.create(:id => 'site2', :name => 'site2',
+                :password => '1234', :password_confirmation => '1234',
+                :permission_level => 1, :site_id => 2).save
+    User.create(:id => 'op1', :name => 'op1',
+                :password => '1234', :password_confirmation => '1234',
+                :permission_level => 2, :site_id => 1).save
+    User.create(:id => 'op2', :name => 'op2',
+                :password => '1234', :password_confirmation => '1234',
+                :permission_level => 2, :site_id => 2).save
   end
 end
 

@@ -2,10 +2,6 @@ require 'bcrypt'
 
 class Application
 
-  get "/" do     
-    haml :index
-  end
-	
 	get "/manager", :auth => :admin do
     haml :home
   end
