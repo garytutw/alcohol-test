@@ -1,23 +1,23 @@
 %div
   %div
-  %h1.page_title 新增使用者
+  %h1.page_title 新增帳號
   %form{:action => "/manager/signup", :method => "post"}
     .field
       .label
         %label{:for => "user_id"} 員工序號
-      %input{ :id => "user_id", :name => "user[id]", :size => 30, :type => "text", :value => locals["id"]}
+      %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => locals["id"]}
     .field
       .label
         %label{:for => "user_name"} 員工姓名
-      %input{ :id => "user_name", :name => "user[name]", :size => 30, :type => "text", :value => locals["name"]}
+      %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => locals["name"]}
     .field
       .label
         %label{:for => "user_password"} 密碼
-      %input{ :id => "user_password", :name => "user[password]", :size => 30, :type => "password" }
+      %input{ :id => "user_password", :name => "user[password]", :size => 10, :type => "password" }
     .field
       .label
         %label{:for => "user_password_confirmation"} 密碼確認
-      %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 30, :type => "password" }
+      %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 10, :type => "password" }
     .field
       .label
         %label{:for => "user_site"} 所屬分站
@@ -35,6 +35,6 @@
         %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
     .buttons
-      %input{ :value => "新增使用者", :type => "submit"}
+      %input{ :value => "新增帳號", :type => "submit"}
       / %a{:href => "/login", :class => 'sinatra_authentication_link'}
       /  Login

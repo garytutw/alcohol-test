@@ -1,0 +1,51 @@
+%div
+  %div
+  %h1.page_title 編輯帳號資訊
+  - if @user.nil?
+    %form{:action => "/manager/edit", :method => "get"}
+      .field
+        .label
+          %label{:for => "user_id"} 員工序號
+        %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => ""}
+      %br
+      .buttons
+        %input{:name => "update", :value => "取得帳號資訊", :type => "submit"}
+  -else
+    %form{:action => "/manager/edit", :method => "post"}
+      .field
+        .label
+          %label{:for => "user_id"} 員工序號
+        %input{ :type => "hidden", :name => "user[id]", :value => @user.id}
+        %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => @user.id, :disabled => "disabled"}
+      .field
+        .label
+          %label{:for => "user_name"} 員工姓名
+        %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => @user.name, :disabled => "disabled"}
+      .field
+        .label
+          %label{:for => "user_password"} 密碼
+        %input{ :id => "user_password", :name => "user[password]", :size => 10, :type => "password" }
+      .field
+        .label
+          %label{:for => "user_password_confirmation"} 密碼確認
+        %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 10, :type => "password" }
+      .field
+        .label
+          %label{:for => "user_site"} 所屬分站
+        %select{:name => "user[site]"}
+          - @sites.each do |site|  
+            %option{:value => site.id} #{site.name}
+          
+      .field
+        .label
+          %label{:for => "user_permission_level"} 系統權限
+        %select{:name => "user[permission_level]"}
+          %option{:value => -1, :selected => @user.permission_level==-1?true:false} 系統管理者
+          %option{:value => 0, :selected => @user.permission_level==0?true:false} 稽核人員
+          %option{:value => 1, :selected => @user.permission_level==1?true:false} 分站主管
+          %option{:value => 2, :selected => @user.permission_level==2?true:false} 登錄人員
+      %br
+      .buttons
+        %input{:name => "update", :value => "修改帳號", :type => "submit"}
+        %input{:name => "delete", :value => "移除帳號", :type => "submit"}
+        %input{:name => "cancel", :value => "取消", :type => "submit"}

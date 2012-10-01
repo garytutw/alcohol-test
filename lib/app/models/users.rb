@@ -12,11 +12,17 @@ class User
   property :permission_level, Integer, :default => 2
   belongs_to :site, :required => false
   
-  validates_presence_of         :password
-  validates_presence_of         :password_confirmation
+  validates_presence_of         :password, :unless => Proc.new { |t| t.password_hash }
+  validates_presence_of         :password_confirmation, :unless => Proc.new { |t| t.password_hash }
   validates_confirmation_of     :password
   #validates_length_of           :password, :min => 6
-
+	
+  def password=(pass)
+    @password = pass
+    self.password_salt = BCrypt::Engine.generate_salt if !self.password_salt
+    self.password_hash = BCrypt::Engine.hash_secret(@password, self.password_salt)
+  end
+  
   after :create do
     self.token = SecureRandom.hex
   end
