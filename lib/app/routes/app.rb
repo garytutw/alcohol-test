@@ -64,8 +64,6 @@ class Application
   post "/manager/signup", :auth => :admin do
   	params[:user]["site"] = Site.first(params[:user][:site])
     user = User.create(params[:user])
-    #user.password_salt = BCrypt::Engine.generate_salt
-    #user.password_hash = BCrypt::Engine.hash_secret(params[:user][:password], user.password_salt)
     if user.save
       flash[:notice] = "User account #{user.name} created!" 
       #session[:user] = user.token # no need to switch to the newly created user
@@ -112,29 +110,4 @@ class Application
     redirect "/login"
   end
   
-  # for site reporting
-  get "/site", :auth => [:user, :manager] do
-    haml :home
-  end
-  
-  #=============== testing only ===================
-  get "/secret" do
-    login_required
-    "This is a secret secret"
-  end
-
-  get "/supersecret" do
-    if current_user
-      admin_required
-      "Well done on being super special. You're a star!"
-    else
-      haml :login
-    end
-
-  end
-
-  get "/personal/:id" do
-    is_owner? params[:id]
-    "<pre>id: #{current_user.id}\nname: #{current_user.name}\nadmin? #{current_user.admin}</pre>"
-  end
 end
