@@ -1,3 +1,4 @@
+# encoding: utf-8
 
 namespace :db do
   require_relative '../app/models/init'
@@ -27,12 +28,14 @@ namespace :db do
         end
       end
     end
-    insert_csv('test/data1.csv', -24*60*60)
-    insert_csv('test/data2.csv', -24*60*60*2)    
+    (1..7).each do |i|
+      insert_csv("test/data#{i}.csv", -24*60*60*i)
+    end
     i = 1
     Site.all.each do |s|
-      s.update_report(Date.today - 1)
-      s.update_report(Date.today - 2)
+      (1..7).each do |d|
+        s.update_report(Date.today - d)
+      end
       s.seq = i
       i += 1
       s.save
@@ -41,19 +44,19 @@ namespace :db do
     User.create(:id => 'admin', :name => 'admin',
                 :password => 'admin', :password_confirmation => 'admin',
                 :permission_level => -1).save
-    User.create(:id => 'hq', :name => 'hq',
+    User.create(:id => 'hq', :name => '總管理處',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 0).save
-    User.create(:id => 'site1', :name => 'site1',
+    User.create(:id => 'site1', :name => '主管1',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 1, :site_id => 1).save
-    User.create(:id => 'site2', :name => 'site2',
+    User.create(:id => 'site2', :name => '主管2',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 1, :site_id => 2).save
-    User.create(:id => 'op1', :name => 'op1',
+    User.create(:id => 'op1', :name => '調度士1',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 2, :site_id => 1).save
-    User.create(:id => 'op2', :name => 'op2',
+    User.create(:id => 'op2', :name => '調度士2',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 2, :site_id => 2).save
   end

@@ -6,6 +6,7 @@ class SiteReport
   belongs_to :site, :key => true
 
   property :total_tests, Integer
+  property :total_trips, Integer, :default => 0, :required => false
   property :operator_tests, Integer, :default => 0, :required => false
   property :trainees, Integer, :default => 0, :required => false
   property :pumpings, Integer, :default => 0, :required => false
