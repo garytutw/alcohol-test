@@ -32,7 +32,7 @@ class Application
       @site_report = OpenStruct.new params[:site_report]
     else
       log = ''
-      [:operator_tests, :trainees, :pumpings, :repeats].each do |k|
+      [:total_trips, :operator_tests, :trainees, :pumpings, :repeats].each do |k|
         ov = @site_report.send(k)
         nv = params["site_report"][k.to_s].to_i
         if ov != nv
