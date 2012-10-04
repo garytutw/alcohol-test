@@ -24,41 +24,14 @@
               %a{:href => "/login"}
                 登入    
           %span
-      - if request.path.starts_with? '/manager'
-        %nav
-          %ul
-            %li
-              %a.selected{:href => "/manager/signup"} 新增帳號
-            %li
-              %a{:href => "/manager/edit"} 編輯帳號資訊
-            %li
-              %a{:href => "/manager"} 新增分站
-            %li
-              %a{:href => "/manager"} 編輯分站資訊
-      - else             
-        %nav
-          %ul
-            /
-              %li
-                %a.selected{:href => "/"} 全省日報表
-              %li
-                %a{:href => "/site"} 分站測試記錄
-              %li
-                %a{:href => "/manager"} 管理者
+    %section.columns.clear
       - [:notice, :warning, :error].each do |name|
         - if flash.has_key?(name)
           %h3{:id => name, :class => name} #{flash[name]}
 
     = yield
     %footer
-      %p c 2011 Huah Chi Co., LD., all rights reserved.
-      %ul
-        %li
-          %a{:href => "/"} Home
-        %li
-          %a{:href => "/about.html"} About
-        %li
-          %a{:href => "/contact.html"} Contact
+      %p Copyright © 2011 Huah Chi Co., LD., all rights reserved.
     / end mainRight
     #logoTxt
       %h1

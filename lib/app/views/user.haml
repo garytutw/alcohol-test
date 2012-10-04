@@ -1,5 +1,5 @@
-%div
-  %div
+#wrapper
+  #content
   %h1.page_title 編輯帳號資訊
   - if @user.nil?
     %form{:action => "/manager/edit", :method => "get"}
@@ -49,3 +49,14 @@
         %input{:name => "update", :value => "修改帳號", :type => "submit"}
         %input{:name => "delete", :value => "移除帳號", :type => "submit"}
         %input{:name => "cancel", :value => "取消", :type => "submit"}
+#navigation
+  %nav
+    %ul
+      %li
+        %a{:href => "/manager/signup"} 新增帳號
+      %li
+        %a.selected{:href => "/manager/edit"} 編輯帳號
+      %li
+        %a{:href => "/manager"} 新增分站
+      %li
+        %a{:href => "/manager"} 編輯分站資訊

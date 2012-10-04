@@ -3,7 +3,7 @@ require 'bcrypt'
 class Application
 
 	get "/manager", :auth => :admin do
-    haml :home
+    haml :manager
   end
   
   get "/manager/edit", :auth => :admin do
@@ -87,7 +87,7 @@ class Application
     if user = User.first(:id => params[:id])
       if user.password_hash == BCrypt::Engine.hash_secret(params[:password], user.password_salt)
         session[:user] = user.token 
-        response.set_cookie "user", {:value => user.token, :expires => (Time.now + 52*7*24*60*60)} if params[:remember_me]
+        response.set_cookie "user", {:value => user.token, :expires => (Time.now + 24*60*60)} if params[:remember_me]
         redirect_last
       else
         flash[:error] = "ID/Password combination does not match"

@@ -1,5 +1,5 @@
-%div
-  %div
+#wrapper
+  #content
   %h1.page_title 新增帳號
   %form{:action => "/manager/signup", :method => "post"}
     .field
@@ -36,5 +36,15 @@
     %br
     .buttons
       %input{ :value => "新增帳號", :type => "submit"}
-      / %a{:href => "/login", :class => 'sinatra_authentication_link'}
-      /  Login
+      
+#navigation
+  %nav
+    %ul
+      %li
+        %a.selected{:href => "/manager/signup"} 新增帳號
+      %li
+        %a{:href => "/manager/edit"} 編輯帳號
+      %li
+        %a{:href => "/manager"} 新增分站
+      %li
+        %a{:href => "/manager"} 編輯分站資訊  
