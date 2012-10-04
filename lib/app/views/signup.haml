@@ -3,39 +3,41 @@
   %h1.page_title 新增帳號
   %form{:action => "/manager/signup", :method => "post"}
     .field
-      .label
-        %label{:for => "user_id"} 員工序號
-      %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => locals["id"]}
+      %label.label{:for => "user_id"} 員工序號
+      .collection
+        %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => locals["id"]}
     .field
-      .label
-        %label{:for => "user_name"} 員工姓名
-      %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => locals["name"]}
+      %label.label{:for => "user_name"} 員工姓名
+      .collection
+        %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => locals["name"]}
     .field
-      .label
-        %label{:for => "user_password"} 密碼
-      %input{ :id => "user_password", :name => "user[password]", :size => 10, :type => "password" }
+      %label.label{:for => "user_password"} 密碼
+      .collection
+        %input{ :id => "user_password", :name => "user[password]", :size => 10, :type => "password" }
     .field
-      .label
-        %label{:for => "user_password_confirmation"} 密碼確認
-      %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 10, :type => "password" }
+      %label.label{:for => "user_password_confirmation"} 密碼確認
+      .collection
+        %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 10, :type => "password" }
     .field
-      .label
-        %label{:for => "user_site"} 所屬分站
-      %select{:name => "user[site]"}
-        - @sites.each do |site|  
-          %option{:value => site.id} #{site.name}
+      %label.label{:for => "user_site"} 所屬分站
+      .collection
+        %select{:name => "user[site]"}
+          %option{:value => 0, :selected => true} - 總公司 -
+          - @sites.each do |site|  
+            %option{:value => site.id} #{site.name}
         
     .field
-      .label
-        %label{:for => "user_permission_level"} 系統權限
-      %select{:name => "user[permission_level]"}
-        %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
-        %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 總站主管
-        %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
-        %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
+      %label.label{:for => "user_permission_level"} 系統權限
+      .collection
+        %select{:name => "user[permission_level]"}
+          %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
+          %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 總站主管
+          %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
+          %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
-    .buttons
-      %input{ :value => "新增帳號", :type => "submit"}
+    .field
+      .collection
+        %input{ :value => "新增帳號", :type => "submit"}
       
 #navigation
   %nav

@@ -96,10 +96,23 @@ body {
 	font-weight: bold;
 }
 
-label {
+.field label {
+	width: 10em;
 	color: #6F856C !important;
+	display: inline-block;
 	font-weight: bold;
-	text-align: left;
+	text-align: right;
+}
+
+.field {
+	margin-bottom: 1em;
+  position: relative;
+}
+
+.label {
+color: #505050;
+font-size: 100%;
+padding-right: 4px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -237,6 +250,11 @@ a:focus {
   background: #66FF33;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.field div {
+display: inline-block;
+zoom: 1;
 }
 /* Spacing
 ----------------------------------------------------------------------------------------------------*/
