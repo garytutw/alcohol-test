@@ -345,7 +345,7 @@ body {
 	right: 0;
 	width: 124px;
 	z-index: 9;
-	border: none;<img src="../../Autumn2/images/main_bkgd.png" width="260" height="10" alt="" border="0">
+	border: none;
 }
 
 #logoTxt h2 span {
@@ -418,12 +418,12 @@ nav ul li a {
 nav ul li a:hover {
 	color: #C17260;
 	text-decoration: none;
-  background: url(../images/button_hov.png) no-repeat;
+  	background: url(../images/button_hov.png) no-repeat;
 }
 
 nav ul li a.selected {
 	color: #26171d;
-  background: url(../images/button_sel.png) no-repeat;
+  	background: url(../images/button_sel.png) no-repeat;
 }
 
 nav ul li a.selected:hover {
@@ -463,15 +463,15 @@ nav ul li a.selected:hover {
 
 .float_right {
 	float: right;
-  display: inline-block;
-  width: 630px;
+    display: inline-block;
+  	width: 630px;
 	margin: 20px 0 0 0;
 	padding-left: 0px;
 	border: none;
 }
 #signature {
 	margin-bottom: 5px;
-  margin-right: 10px;
+  	margin-right: 10px;
 	text-align: right;
 }
 
@@ -479,14 +479,14 @@ footer {
 	clear: both;
 	background: url(../images/foot_bkgd.png) repeat-x;
 	padding-top: 10px;
-  height: 40px;
+  	height: 40px;
 	border: none;
 }
 
 footer p {
   margin-left: 10px;
  	font-size: 0.8em;
-  color: #a6351c;
+  	color: #a6351c;
 	border: none;
 	text-align: right;
 }
@@ -497,7 +497,7 @@ footer ul {
 	width: 330px;
 	padding-top: 3px;
 	text-align: right;
-  margin-right: 10px;
+  	margin-right: 10px;
 	border: none;
 }
 
@@ -521,3 +521,28 @@ footer ul li a:hover {
 /* Content Positioning and Size */
 #navigation		{ float: left; width: 20%; }
 #content		{ margin-left: 44.3%; }
+
+#style.css                  
+.handle:hover{cursor: move;}
+
+#sites { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+#sites li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+#sites li span { position: absolute; margin-left: -1.3em; }
+
+.ui-icon {
+width: 16px;
+height: 16px;
+background-image: url(../images/222222_256x240_icons_icons.png);
+}
+
+.ui-icon-arrowthick-2-n-s {
+background-position: -128px -48px;
+}
+
+.ui-state-default {
+border: 1px solid #CCC;
+background: #F6F6F6;
+font-weight: bold;
+color: #1C94C4;
+outline: none;
+}

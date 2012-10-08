@@ -110,4 +110,18 @@ class Application
     redirect "/login"
   end
   
+  get "/sitemgr" do
+    @sites ||= Site.all if @site.nil?
+    haml :site_mgr
+  end
+  
+  post "/site/sort" do
+  	puts ">>>>>>>>>>"
+    p params  #['site']
+  end
+  
+  post "/site/new" do
+    puts ">>######>>"
+    p params  #['site']
+  end
 end

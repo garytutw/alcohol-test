@@ -46,7 +46,7 @@ namespace :db do
                 :permission_level => -1).save
     User.create(:id => 'hq', :name => '總管理處',
                 :password => '1234', :password_confirmation => '1234',
-                :permission_level => 0).save
+                :permission_level => 0, :site_id => 0).save
     User.create(:id => 'site1', :name => '主管1',
                 :password => '1234', :password_confirmation => '1234',
                 :permission_level => 1, :site_id => 1).save
