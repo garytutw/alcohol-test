@@ -110,18 +110,31 @@ class Application
     redirect "/login"
   end
   
-  get "/sitemgr" do
-    @sites ||= Site.all if @site.nil?
+  get "/manager/sitemgr", :auth => :admin do
+    @sites = Site.all(:order => [ :seq.asc ])
     haml :site_mgr
   end
   
   post "/site/sort" do
-  	puts ">>>>>>>>>>"
-    p params  #['site']
+  	@sites ||= Site.all if @site.nil?
+    @sites.each do |site|
+      site.seq = params['site'].index(site.id.to_s) + 1
+      if !site.save
+        puts site.errors.full_messages
+      end
+    end
   end
   
-  post "/site/new" do
-    puts ">>######>>"
-    p params  #['site']
+  post "/manager/sitenew", :auth => :admin do
+    @sites ||= Site.all if @site.nil?
+    if params.length > 0 # new site
+      site = Site.create(:name => params[:site], :seq => @sites.length + 1)
+      if site.save
+        redirect "/manager/sitemgr"
+      else
+        flash[:error] = site.errors.full_messages     
+      end
+    end  
   end
+  
 end

@@ -21,23 +21,23 @@
   });
   // Code for new site
   $('#btnAdd').click(function() {
-    alert('new function called: ' + #{@sites.length})
     var num = #{@sites.length};
     var newNum = new Number(num + 1);
-    $('ul#sites').append('<li class="ui-state-default", id="site_' + newNum +'"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite"></input></li>');
+    $('ul#sites').append('<li class="ui-state-default", id="site_' + newNum +
+    '"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite" type="text" name="site"></input></li>');
   });
   });
 
 #wrapper
   #content
-    %h3 請移動分站項目以調整報表順序
-    %form{:id => "myForm"}
+    %h1.page_title 請移動分站項目以調整報表順序
+    %form{:id => "siteUpdate", :action => "/manager/sitenew", :method => "post"}
       %ul#sites
         - @sites.each do |site| 
           %li.ui-state-default{:id => "site_" + site.id.to_s}
             %span.handle.ui-icon.ui-icon-arrowthick-2-n-s
             #{site.name}
-
+  
       %br
       .field
         .collection
@@ -50,6 +50,4 @@
       %li
         %a{:href => "/manager/edit"} 編輯帳號
       %li
-        %a{:href => "/manager"} 新增分站
-      %li
-        %a{:href => "/manager"} 編輯分站資訊
+        %a.selected{:href => "/manager/sitemgr"} 分站資訊維護
