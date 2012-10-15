@@ -1,5 +1,11 @@
-%section.columns.clear
-  %div
+#navigation
+  %nav
+    %ul
+      - @available_dates.each do |d|
+        %li
+          %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d
+#wrapper
+  #report
     %div
       %h2
         %span 統聯酒測日報表 #{@date}
@@ -58,7 +64,3 @@
           %td
             %span  
               %a{:href => "/site/#{r.site.name}/#{@date}"} 更新
-  %div
-    - @available_dates.each do |d|
-      %a{:href => "/report/#{d}"}= d
-      &nbsp;&nbsp;
