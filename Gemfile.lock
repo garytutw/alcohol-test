@@ -1,13 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.2.8)
-      i18n (~> 0.6)
-      multi_json (~> 1.0)
     addressable (2.2.8)
     bcrypt-ruby (3.0.1)
     bcrypt-ruby (3.0.1-x86-mingw32)
-    chronic (0.6.7)
     daemons (1.1.9)
     data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
@@ -70,13 +66,14 @@ GEM
     eventmachine (1.0.0-x86-mingw32)
     fastercsv (1.5.5)
     haml (3.1.7)
-    i18n (0.6.1)
     json (1.7.5)
     json_pure (1.7.5)
     multi_json (1.3.6)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
+    rufus-scheduler (2.0.17)
+      tzinfo (>= 0.3.23)
     sinatra (1.3.3)
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
@@ -89,10 +86,8 @@ GEM
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     tilt (1.3.3)
+    tzinfo (0.3.33)
     uuidtools (2.1.3)
-    whenever (0.7.3)
-      activesupport (>= 2.3.4)
-      chronic (~> 0.6.3)
 
 PLATFORMS
   ruby
@@ -105,7 +100,7 @@ DEPENDENCIES
   dm-sqlite-adapter (>= 1.2.0)
   haml (>= 3.1.7)
   json (>= 1.7.5)
+  rufus-scheduler (>= 2.0.17)
   sinatra (>= 1.3.3)
   sinatra-flash (>= 0.3.0)
   thin (>= 1.4.1)
-  whenever (>= 0.7.3)

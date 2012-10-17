@@ -5,9 +5,9 @@ gem 'sinatra',      '>= 1.3.3'
 gem 'data_mapper',  '>= 1.2.0'
 gem 'sinatra-flash', '>= 0.3.0'
 gem 'haml',         '>= 3.1.7'
-gem 'whenever',     '>=0.7.3'
 gem 'bcrypt-ruby',  '>=3.0.1'
 gem 'json',  '>=1.7.5'
+gem 'rufus-scheduler', '>= 2.0.17'
 
 group :development do
   gem 'dm-sqlite-adapter',  '>= 1.2.0'
