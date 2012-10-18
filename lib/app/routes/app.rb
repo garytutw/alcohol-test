@@ -26,7 +26,7 @@ class Application
   post "/manager/edit", :auth => :admin do
   	user = User.first(:id => params[:user][:id])
   	if params.has_key? "update"
-  		params[:user]["site"] = Site.first(params[:user][:site])
+  		params[:user]["site"] = Site.first(:id => params[:user][:site])
       user_attributes = params[:user]
       if params[:user][:password] == "" # not set in web page
         user_attributes.delete("password")
@@ -62,7 +62,7 @@ class Application
   end
 
   post "/manager/signup", :auth => :admin do
-  	params[:user]["site"] = Site.first(params[:user][:site])
+  	params[:user]["site"] = Site.first(:id => params[:user][:site])
     user = User.create(params[:user])
     if user.save
       flash[:notice] = "User account #{user.name} created!" 

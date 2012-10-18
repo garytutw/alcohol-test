@@ -8,6 +8,7 @@ gem 'haml',         '>= 3.1.7'
 gem 'bcrypt-ruby',  '>=3.0.1'
 gem 'json',  '>=1.7.5'
 gem 'rufus-scheduler', '>= 2.0.17'
+gem 'mail',  '>=2.4.4'
 
 group :development do
   gem 'dm-sqlite-adapter',  '>= 1.2.0'

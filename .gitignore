@@ -4,3 +4,4 @@ tmp/*
 *.csv
 *.DS_Store
 *.project
+photos/*
