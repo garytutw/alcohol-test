@@ -21,12 +21,7 @@
           $(".buttons input").attr("disabled", "disabled");
       });
     });
-#navigation
-  %nav
-    %ul
-      - @available_dates.each do |d|
-        %li
-          %a{:href => "/site/#{@site_name}/#{d}", :class => d == @date.to_s && "selected"}= d
+
 #wrapper
   #report
     %h1.page_title= "統聯酒測日報表 - #{@site_name} - #{@date}"
@@ -73,3 +68,9 @@
             %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
           - else
             %input{ :value => "核覆", :type => "submit"}
+#navigation
+  %nav
+    %ul
+      - @available_dates.each do |d|
+        %li
+          %a{:href => "/site/#{@site_name}/#{d}", :class => d == @date.to_s && "selected"}= d            

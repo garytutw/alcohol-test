@@ -1,9 +1,3 @@
-#navigation
-  %nav
-    %ul
-      - @available_dates.each do |d|
-        %li
-          %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d
 #wrapper
   #report
     %div
@@ -64,3 +58,9 @@
           %td
             %span  
               %a{:href => "/site/#{r.site.name}/#{@date}"} 更新
+#navigation
+  %nav
+    %ul
+      - @available_dates.each do |d|
+        %li
+          %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d

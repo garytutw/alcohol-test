@@ -92,10 +92,10 @@ GEM
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     tilt (1.3.3)
-    tzinfo (0.3.33)
     treetop (1.4.11)
       polyglot
       polyglot (>= 0.3.1)
+    tzinfo (0.3.33)
     uuidtools (2.1.3)
 
 PLATFORMS
@@ -109,8 +109,8 @@ DEPENDENCIES
   dm-sqlite-adapter (>= 1.2.0)
   haml (>= 3.1.7)
   json (>= 1.7.5)
-  rufus-scheduler (>= 2.0.17)
   mail (>= 2.4.4)
+  rufus-scheduler (>= 2.0.17)
   sinatra (>= 1.3.3)
   sinatra-flash (>= 0.3.0)
   thin (>= 1.4.1)
