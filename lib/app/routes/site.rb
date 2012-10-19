@@ -1,16 +1,21 @@
 #encoding: utf-8
 class Application
   def available_dates(site)
+    limit = (current_user.in_role? :hq) ? 7 : 2
     repository(:default).adapter.select(
-      "select date from site_reports, sites where sites.name='#{site}' and sites.id=site_reports.site_id order by date desc limit 7")
+      "select date from site_reports, sites where sites.name='#{site}' and sites.id=site_reports.site_id order by date desc limit #{limit}")
   end
 
   get '/site/:site/?:date?', :auth => [:hq, :auditor, :operator] do
-    @date = params[:date] || Date.today - 1
+    @date = params[:date] || Date.today
     @site_name = params[:site]
-    @site_report = SiteReport.first(:site => {:name => params[:site]}, :date => @date) ||
-      SiteReport.first(:site => {:name => params[:site]}, :order => [:date.desc], :limit => 1)
-    @date = @site_report.date
+    @site_report = case params[:date].nil?
+                   when false
+                     @site_report = SiteReport.first(:site => {:name => params[:site]}, :date => params[:date])
+                   else
+                     @site_report = SiteReport.first(:site => {:name => params[:site]}, :order => [:date.desc], :limit => 1)
+                   end
+    @date = @site_report.date.to_s
     @available_dates = available_dates(params[:site])
     @status_text = case @site_report.status
                    when 0 then '未輸入'

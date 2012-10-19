@@ -29,16 +29,7 @@ namespace :db do
       end
     end
     (1..7).each do |i|
-      insert_csv("test/data#{i}.csv", -24*60*60*i)
-    end
-    i = 1
-    Site.all.each do |s|
-      (1..7).each do |d|
-        s.update_report(Date.today - d)
-      end
-      s.seq = i
-      i += 1
-      s.save
+      insert_csv("test/data#{i}.csv", -24*60*60*(i-1))
     end
     # admin user
     User.create(:id => 'admin', :name => 'admin',

@@ -11,4 +11,10 @@ class AlcoholTest
 
   belongs_to :driver
   belongs_to :site
+
+  after :create do
+    d = time.to_date
+    SiteReport.get(d, site.id) ||
+    SiteReport.new(:date => d, :site => site).save
+  end
 end
