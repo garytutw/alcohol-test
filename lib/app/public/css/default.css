@@ -547,3 +547,11 @@ font-weight: bold;
 color: #1C94C4;
 outline: none;
 }
+
+.breadcrumbs {
+text-align: left;
+}
+.field .ui {
+width: 150px;
+text-align: left;
+}

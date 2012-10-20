@@ -1,8 +1,28 @@
+:javascript
+  $(function() {
+    $.datepicker.setDefaults(
+      $.extend(
+         $.datepicker.regional['zh-TW'],
+        {'dateFormat':'yy-mm-dd'}
+      )
+    );
+    $("#datepicker").datepicker({
+      showOn: "button",
+      buttonImage: "/images/calendar.gif",
+      buttonImageOnly: true,
+      maxDate: "#{@max_date}",
+      minDate: "#{@min_date}",
+      onSelect: function(date) {
+        window.location = "/report/" + date;
+      }
+    });
+  });
 #wrapper
   #report
     %div
       %h2
-        %span 統聯酒測日報表 #{@date}
+        %span 統聯酒測日報表
+        %input{:id => "datepicker", :disabled => "disabled", :value => @date}
     %table{:border => "1", :cellpadding => "2", :cellspacing => "2", :style => "background-color: #ffffff;", :width => "100%"}
       %tr{:valign => "top"}
         %th{:width => "35"}

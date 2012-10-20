@@ -22,6 +22,7 @@ class Application
                    when 1 then '未核覆'
                    when 2 then '已核覆'
                    end
+    @has_bc = true if current_user.in_role? :hq
     show :site_report
   end
 
@@ -58,6 +59,7 @@ class Application
                      when 2 then '已核覆'
                      end
     end
+    @has_bc = true if current_user.in_role? :hq
     show :site_report
   end
 

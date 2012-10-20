@@ -41,8 +41,3 @@ end
 # Routes
 Dir["#{root_dir}/routes/*.rb"].each {|f| require_relative f}
 
-# Cron jobs
-require_relative "crons.rb"
-
-
-
