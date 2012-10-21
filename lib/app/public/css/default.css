@@ -555,3 +555,10 @@ text-align: left;
 width: 150px;
 text-align: left;
 }
+
+table, th, td {
+border: 1px solid black;
+}
+th {
+white-space: nowrap;
+}
