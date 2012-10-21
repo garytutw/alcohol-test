@@ -1,0 +1,7 @@
+
+address:    localhost
+port:       110
+user_name:  user
+password:   password
+enable_ssl: false
+
