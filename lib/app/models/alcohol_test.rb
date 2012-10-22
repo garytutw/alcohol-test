@@ -1,7 +1,5 @@
 class AlcoholTest
   
-  ANOMALY_BOUND = 0.01
-
   include DataMapper::Resource
 
   property :id,   Serial

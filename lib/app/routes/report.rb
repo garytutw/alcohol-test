@@ -26,10 +26,7 @@ class Application
     @reports = []
     Site.all(:order => [:seq.asc]).each do |s|
       sr = SiteReport.get(@date, s.id)
-      sr.total_tests = AlcoholTest.count(:site => s, :time => dt_lower..dt_upper)
       next if sr.total_tests == 0
-      sr.anomaly_tests = AlcoholTest.count(:site => s, :time => dt_lower..dt_upper,
-                                        :value.gt => AlcoholTest::ANOMALY_BOUND)
       @reports << sr
     end
 

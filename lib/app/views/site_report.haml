@@ -1,28 +1,32 @@
-- if !current_user.in_role? :auditor or @site_report.status == 2
-  :javascript
-    function validate() {
-      $(".buttons input").attr("disabled", "disabled");
-      // check if integer
-      if (Number(this.value) != this.value) {
-      //  alert("Not integer");
-      //  return;
-      }
-      var dirty = false;
-      $("input.updatable").add("select.selectable").each(function() {
-        if ($(this).attr("ovalue") != $(this).attr("value")) {
-          dirty = true;
-          return false;
-        }
-      });
-      if (dirty)
-        $(".buttons input").removeAttr("disabled");
-      else
-        $(".buttons input").attr("disabled", "disabled");
+:javascript
+  function validate() {
+    $(".buttons input").attr("disabled", "disabled");
+    // check if integer
+    if (Number(this.value) != this.value) {
+    //  alert("Not integer");
+    //  return;
     }
-    $(function() {
-      $("input.editable").keyup(validate);
-      $("select.selectable").change(validate);
+    var dirty = false;
+    $("input.editable").add("select.selectable").each(function() {
+      if ($(this).attr("ovalue") != $(this).attr("value")) {
+        dirty = true;
+        return false;
+      }
     });
+    if ($("#total_trips").val() == '')
+      dirty = false
+    if (dirty)
+      $(".buttons input").removeAttr("disabled");
+    else
+      $(".buttons input").attr("disabled", "disabled");
+  }
+  $(function() {
+    $("input.editable").keyup(validate);
+    $("select.selectable").change(validate);
+    if ($("#total_trips").val() == 0) {
+      $("#confirm").attr("disabled", "disabled");
+    }
+  });
 
 #wrapper
   #report
@@ -84,7 +88,7 @@
           - if !current_user.in_role? :auditor or @site_report.status == 2
             %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
           - else
-            %input{ :value => "核覆", :type => "submit"}
+            %input{:id => "confirm", :value => "核覆", :type => "submit"}
 #navigation
   %nav
     %ul

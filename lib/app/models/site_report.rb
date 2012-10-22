@@ -2,7 +2,7 @@
 class SiteReport
   include DataMapper::Resource
 
-  attr_accessor :total_tests, :anomaly_tests
+  @@app_config = YAML.load_file('config/app.yaml')
 
   property :date, Date, :key => true, :unique => false
   belongs_to :site, :key => true
@@ -34,6 +34,21 @@ class SiteReport
     else
       0
     end
+  end
+
+  def total_tests
+    return @tt if @tt
+    dt_upper = ((date + 1).to_time - 1).to_datetime
+    dt_lower = date.to_time.to_datetime
+    @tt = AlcoholTest.count(:site_id => site_id, :time => dt_lower..dt_upper)
+  end
+
+  def anomaly_tests
+    return @at if @at
+    dt_upper = ((date + 1).to_time - 1).to_datetime
+    dt_lower = date.to_time.to_datetime
+    @at = AlcoholTest.count(:site_id => site_id, :time => dt_lower..dt_upper,
+                            :value.gt => @@app_config["anomaly_bound"])
   end
 
   def total_cars
