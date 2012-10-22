@@ -37,19 +37,20 @@ class Application
       @status_text = params[:status]
       @site_report = OpenStruct.new params[:site_report]
     else
-      log = ''
+      log = {} 
       [:total_trips, :operator_tests, :trainees, :pumpings, :repeats].each do |k|
         ov = @site_report.send(k)
         nv = params["site_report"][k.to_s].to_i
         if ov != nv
-          log << "  [field:#{k.to_s}]: #{ov} => #{nv}\n"
+          log[:changes] = [] if !log[:changes]
+          log[:changes] << {:f => k.to_s, :ov => ov, :nv => nv}
           @site_report.send("#{k.to_s}=", nv)
         end
       end
-      if log.size
+      if log[:changes]
         @site_report.save
-        log.insert(0, "[user:#{current_user.id}] 更新\n")
-        srl = SiteReportLog.new(:log => log)
+        log[:owner] = current_user.id
+        srl = SiteReportLog.new(:log => JSON.generate(log))
         srl.site_report = @site_report
         srl.save
       end

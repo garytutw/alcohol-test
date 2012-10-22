@@ -562,3 +562,13 @@ border: 1px solid black;
 th {
 white-space: nowrap;
 }
+
+.logh {
+text-align: left;
+margin: 5px;
+background: #fece2f;
+}
+.logb {
+text-align: left;
+margin: 15px;
+}

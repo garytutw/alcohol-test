@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 module Helpers
   def stylesheets(*sheets)
     sheets.each {|sheet|
@@ -20,4 +20,15 @@ module Helpers
   include Rack::Utils
   alias :h :escape_html
 
+  @@field_names = {
+    "total_trips" => "總班次數",
+    "operator_tests" => "調度測試",
+    "trainees" => "見習",
+    "pumpings" => "抽班",
+    "repeats" => "重複",
+  }
+  def log_content(change)
+    name = @@field_names[change["f"]] || change["f"]
+    "欄位: #{name}, #{change["ov"]} ==> #{change["nv"]}"
+  end
 end

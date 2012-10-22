@@ -26,6 +26,11 @@
     if ($("#total_trips").val() == 0) {
       $("#confirm").attr("disabled", "disabled");
     }
+    $("#logs").accordion({
+      header: 'h5',
+      collapsible: true,
+      active: false,
+    });
   });
 
 #wrapper
@@ -89,6 +94,18 @@
             %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
           - else
             %input{:id => "confirm", :value => "核覆", :type => "submit"}
+      #logs
+        %h5 記錄
+        %div
+          - @site_report.site_report_logs.each do |log| 
+            - log_obj = JSON.parse(log.log)
+            .logh
+              %b #{User.get(log_obj['owner']).name}
+              於 #{log.created_at.strftime('%G/%m/%d %X')} 更新
+            .logb
+              - log_obj["changes"].each do |c|
+                = log_content c
+                %br
 #navigation
   %nav
     %ul
