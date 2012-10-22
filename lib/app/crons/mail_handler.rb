@@ -2,8 +2,9 @@
 require_relative '../models/init'
 require 'mail'
 
+cfg = YAML.load_file('config/mailserver.yaml')
 MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
-IMG_DIR = 'photos'
+IMG_DIR = cfg['img_dir']
 
 def create_directory_if_not_exists(directory_name)
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
@@ -11,15 +12,15 @@ def create_directory_if_not_exists(directory_name)
 end
 
 Mail.defaults do
-  retriever_method :pop3, :address    => "msa.hinet.net",
-                          :port       => 110,
-                          :user_name  => 'pofeng.liu@msa.hinet.net',
-                          :password   => 'cow3xiao',
-                          :enable_ssl => false
+  retriever_method :pop3, :address    => cfg['address'],
+                          :port       => cfg['port'],
+                          :user_name  => cfg['user_name'],
+                          :password   => cfg['password'],
+                          :enable_ssl => cfg['enable_ssl']
 end
-### Use Mail.all for production ~
-Mail.find(:what => :first, :order => :asc, :count => 50, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
-  #mail.skip_deletion
+
+puts "Mail server connected, start to check new mails ..."
+Mail.all(:what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
   begin
     body = mail.text_part.decoded    
     record = Hash.new
@@ -68,11 +69,12 @@ Mail.find(:what => :first, :order => :asc, :count => 50, :keys => MAIL_SUBJECT_K
  
     record[:driver] = Driver.first_or_create(tester)
     record[:image] = filename  
-    puts "[Debug] Inserting alcohol test record: #{record}"
+    puts "[DB] Inserting alcohol test record: #{record}"
     at = AlcoholTest.new(record)
     if at.save
-      puts "Mark this mail to be deleted!"
-#     mail.mark_for_delete
+      if cfg['delete_from_server']
+        mail.mark_for_delete    # delete the mail from server
+      end
     else
       raise "Unable to save alcohol test record: #{at.errors.full_messages }"
     end     
