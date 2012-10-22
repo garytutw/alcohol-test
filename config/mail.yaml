@@ -1,7 +1,7 @@
 
-address:    localhost
-port:       110
-user_name:  user
-password:   password
-enable_ssl: false
-
+address: localhost    # address of the pop3 server
+port: 110   # port for pop3 server connection
+user_name: user   # account of the pop3 server
+password: password    # password of the pop3 server account
+enable_ssl: false   # user ssl for pop3 server connection?
+delete_from_server: true   # if delete the mail from the server after read it? (true for production!!)

@@ -22,15 +22,15 @@ task :receive do
       :password   => config["password"],
       :enable_ssl => config["enable_ssl"]
   end
-  ### Use Mail.all for production ~
-  Mail.find(:what => :first, :order => :asc, :count => config["batch_count"], :keys => MAIL_SUBJECT_KEYWORD) { |mail|
-    #mail.skip_deletion
+  
+  puts "Mail server connected, start to check new mails ..."
+  Mail.all(:what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
     begin
       body = mail.text_part.decoded    
       record = Hash.new
       tester = Hash.new
       tmp = []
-
+      
       body.each_line do |l|
         r = l.split(':')  
         r.each {|v| v.strip!} # remove empty trail
@@ -70,14 +70,15 @@ task :receive do
           end
         end
       end # end attachment
-
+   
       record[:driver] = Driver.first_or_create(tester)
       record[:image] = filename  
-      puts "[Debug] Inserting alcohol test record: #{record}"
+      puts "[DB] Inserting alcohol test record: #{record}"
       at = AlcoholTest.new(record)
       if at.save
-        puts "Mark this mail to be deleted!"
-        #     mail.mark_for_delete
+        if config['delete_from_server']
+          mail.mark_for_delete    # delete the mail from server
+        end
       else
         raise "Unable to save alcohol test record: #{at.errors.full_messages }"
       end     
