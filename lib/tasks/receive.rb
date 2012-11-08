@@ -24,8 +24,7 @@ task :receive do
   end
   
   puts "Mail server connected, start to check new mails ..."
-  Mail.find_and_delete(:count => 'ALL', :what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
-    mail.mark_for_delete = false
+  Mail.all(:what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
     begin
       body = mail.text_part.decoded    
       record = Hash.new
@@ -78,7 +77,7 @@ task :receive do
       at = AlcoholTest.new(record)
       if at.save
         if config['delete_from_server']
-          mail.mark_for_delete = true    # delete the mail from server
+          mail.mark_for_delete    # delete the mail from server
         end
       else
         raise "Unable to save alcohol test record: #{at.errors.full_messages }"
