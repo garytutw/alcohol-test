@@ -1,9 +1,0 @@
-#### Configuration for testing purpose
-img_dir: photos   # directory where pictures in mail will be stored
-address: msa.hinet.net    # address of the pop3 server
-port: 110   # port for pop3 server connection
-user_name: pofeng.liu@msa.hinet.net   # account of the pop3 server
-password: cow3xiao    # password of the pop3 server account
-enable_ssl: false   # user ssl for pop3 server connection?
-delete_from_server: false   # if delete the mail from server after read it? (true for production!!)
-
