@@ -26,7 +26,7 @@ class Application
     @reports = []
     Site.all(:order => [:seq.asc]).each do |s|
       sr = SiteReport.get(@date, s.id)
-      next if sr.total_tests == 0
+      next if !sr or sr.total_tests == 0
       @reports << sr
     end
 
