@@ -24,7 +24,7 @@ class Application < Sinatra::Base
 	# define ACL routing condition
 	set(:auth) do |*roles|   # <- notice the splat here
 	  condition do
-	   	unless logged_in? && roles.any? {|role| current_user.in_role? role }
+	   	unless current_user && logged_in? && roles.any? {|role| current_user.in_role? role }
 	   		session[:redirect_to] ||= @env["REQUEST_URI"].to_s
 	   		if !logged_in?
 	     		redirect "/login", 303
