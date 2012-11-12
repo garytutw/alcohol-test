@@ -9,7 +9,7 @@ class Application
     elsif current_user.in_role? :hq
       redirect "/report"
     else
-      haml :login
+      redirect "/site/#{current_user.site.name}"
     end
   end
 end
