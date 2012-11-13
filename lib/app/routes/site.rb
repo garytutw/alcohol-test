@@ -27,17 +27,17 @@ class Application
   end
 
   post '/site/:site/:date', :auth => [:hq, :auditor, :operator] do
+    log = {}
     @date = params[:date]
     @available_dates = available_dates(params[:site])
     @site_name = params[:site]
     @site_report = SiteReport.first(:site => {:name => params[:site]}, :date => @date)
-    @errors = authorize_update(current_user, @site_report)
+    @errors, state_changed = authorize_update(current_user, @site_report, log)
     @errors.merge! validate(params["site_report"])
     if @errors.size > 0
       @status_text = params[:status]
       @site_report = OpenStruct.new params[:site_report]
     else
-      log = {} 
       [:total_trips, :operator_tests, :trainees, :pumpings, :repeats].each do |k|
         ov = @site_report.send(k)
         nv = params["site_report"][k.to_s].to_i
@@ -47,12 +47,16 @@ class Application
           @site_report.send("#{k.to_s}=", nv)
         end
       end
-      if log[:changes]
+      puts log
+      puts state_changed
+      if log[:changes] || state_changed
         @site_report.save
-        log[:owner] = current_user.id
-        srl = SiteReportLog.new(:log => JSON.generate(log))
-        srl.site_report = @site_report
-        srl.save
+        if log[:changes] || log[:message]
+          log[:owner] = current_user.id
+          srl = SiteReportLog.new(:log => JSON.generate(log))
+          srl.site_report = @site_report
+          srl.save
+        end
       end
       @status_text = case @site_report.status
                      when 0 then '未輸入'
@@ -64,18 +68,26 @@ class Application
     show :site_report
   end
 
-  def authorize_update(current_user, report)
+  def authorize_update(current_user, report, log)
+    state_changed = false
     errors = {}
     case report.status
     when 0 # 未輸入
       report.inputter = current_user
       report.auditor = current_user unless current_user.in_role? :operator
+      state_changed = true
     when 1 # 未核覆
-      report.auditor = current_user unless current_user.in_role? :operator
+      if !current_user.in_role? :operator
+        report.auditor = current_user
+        state_changed = true
+        log[:message] = "核覆資料" 
+      end
     when 2 # 已核覆
-      errors[:authorize] = "無法更改已核覆報告" if current_user.in_role? :operator
+      if current_user.in_role? :operator
+        errors[:authorize] = "無法更改已核覆報告"
+      end
     end
-    errors
+    [errors, state_changed]
   end
 
   def validate(params)

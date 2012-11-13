@@ -103,9 +103,11 @@
               %b #{User.get(log_obj['owner']).name}
               於 #{log.created_at.strftime('%G/%m/%d %X')} 更新
             .logb
-              - log_obj["changes"].each do |c|
-                = log_content c
-                %br
+              - if log_obj["changes"]
+                - log_obj["changes"].each do |c|
+                  = log_content c
+                  %br
+              = log_obj["message"] if log_obj["message"]
 #navigation
   %nav
     %ul
