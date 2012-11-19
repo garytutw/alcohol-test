@@ -20,12 +20,30 @@
     else
       $(".buttons input").attr("disabled", "disabled");
   }
+  function validate2() {
+    var total_trips = $("#total_trips").val();
+    if (Number(total_trips) != total_trips) {
+      alert("總班次數 必須是整數");
+      return false;
+    }
+    total_trips = Number(total_trips);
+    var total_tests = Number($("#total_tests").val());
+    var calc_num = total_trips + Number($("#operator_tests").val()) +
+      Number($("#trainees").val()) + Number($("#pumpings").val()) +
+      Number($("#repeats").val());
+    if (total_tests != calc_num) {
+      alert("總班次數+調度測試+見習+抽班+重複=" + calc_num + " 不等於 受測總次數(" + total_tests + ")");
+      return false;
+    }
+    return true;
+  }
   $(function() {
     $("input.editable").keyup(validate);
     $("select.selectable").change(validate);
     if ($("#total_trips").val() == 0) {
       $("#confirm").attr("disabled", "disabled");
     }
+    $("form").submit(validate2);
     $("#logs").accordion({
       header: 'h5',
       collapsible: true,
@@ -73,7 +91,7 @@
           .ui
             - if f[:isdropdown]
               %select.selectable{:id => f[:id], :name => "site_report[#{f[:id]}]", :ovalue => f[:value]}
-                - (0..10).each do |i|
+                - (0..20).each do |i|
                   %option{:selected => i == f[:value] && "selected"}= i
             - else
               %input.editable{:id => f[:id], :name => "site_report[#{f[:id]}]", :type => "text",

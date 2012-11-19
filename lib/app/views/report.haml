@@ -49,7 +49,7 @@
           %span 主管姓名
         %th{:width => "126"}
           %span 主管覆核
-        %th{:width => "126"}
+        %th{:width => "126", :class => "update_column"}
           %span
       - @reports.each do |r|
         %tr{:valign => "top"}
@@ -78,8 +78,8 @@
             - when 1
               %span  未核覆
             - when 2
-              %span 正確無誤 (Correct)
-          %td
+              %span 正確無誤
+          %td.update_column
             %span  
               %a{:href => "/site/#{r.site.name}/#{@date}"} 更新
 #navigation

@@ -1,6 +1,9 @@
 #mainRight, #navigation, #print, #logoTxt {
 display: none;
 }
+.update_column {
+display: none;
+}
 #report{
 margin: 2%;
 }
