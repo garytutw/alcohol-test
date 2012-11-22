@@ -318,34 +318,35 @@ body {
 
 #logoTxt {
 	background: url(../images/logo_img.png) top left no-repeat;
-	position: absolute;
+	position: relative;
 	top: 0px;
 	left: 10px;
-	width: 245px;
-	height: 85px;
+	width: 100%;
+  height: 118px;
 	border: none;
-  margin-bottom: 150px;
+  margin-top: 2px;
 }
 
+#logoTxt h1 b {
+  color: #1a7c08 !important;
+}
 #logoTxt h1, #logoTxt h2 {
-	color: #fff;
-	font-size: 3em;
+	color: #0505fc;
 	line-height: 1.5em;
 	text-align: center;
 }
 
 #logoTxt h2 {
-	color: #fff;
+	color: #0505fc;
 }
 
 #logoTxt h1 span, #logoTxt h2 span {
 	display: block;
-	position: absolute;
 	top: 2px;
 	right: 0;
-	width: 124px;
 	z-index: 9;
 	border: none;
+
 }
 
 #logoTxt h2 span {
@@ -572,4 +573,7 @@ background: #fece2f;
 .logb {
 text-align: left;
 margin: 15px;
+}
+#report tr.validate_err {
+background-color: #B2F5F5;
 }

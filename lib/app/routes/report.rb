@@ -5,9 +5,9 @@ class Application
     redirect "/report/#{d}"
   end
 
-  def parse_date(dstr)
-    Date.strptime(dstr, '%Y-%m-%d')
-  end
+  #def parse_date(dstr)
+  #  Date.strptime(dstr, '%Y-%m-%d')
+  #end
 
   def calc_dates
     available_dates = repository(:default).adapter.select(
@@ -29,7 +29,6 @@ class Application
       next if !sr or sr.total_tests == 0
       @reports << sr
     end
-
     show :report
   end
 end

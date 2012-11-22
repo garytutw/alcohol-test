@@ -8,7 +8,7 @@ module Helpers
   end
 
   def show(view, options={})
-    haml view
+    haml view, options
   end
 
   def checkbox(name, condition, extras={})

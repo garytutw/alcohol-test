@@ -19,6 +19,17 @@
     $("#print").click(function() {
       window.print();
     });
+
+    $("a.anomaly").click(function() {
+      var tag = $("<div></div>");
+      $.ajax({
+        url: this.href,
+        success: function(data) {
+          tag.html(data).dialog({modal: true, title: '酒測超標清單'}).dialog('open');
+        }
+      });
+      return false;
+    });
   });
 #wrapper
   #report
@@ -52,7 +63,7 @@
         %th{:width => "126", :class => "update_column"}
           %span
       - @reports.each do |r|
-        %tr{:valign => "top"}
+        %tr{:valign => "top", :class => !r.consistent && "validate_err"}
           %td
             %span #{r.site.seq}
           %td
@@ -62,7 +73,11 @@
           %td
             %span= r.total_tests
           %td
-            %span= r.anomaly_tests 
+            %span
+              - if r.anomaly_tests > 0
+                %a{:class => "anomaly", :href => "/anomaly/#{r.site.name}/#{@date}"}= r.anomaly_tests
+              - else
+                = r.anomaly_tests 
           %td
             %span= r.status == 0 ? "N/A" : r.total_trips
           %td

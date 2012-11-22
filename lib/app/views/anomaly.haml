@@ -1,0 +1,22 @@
+%table{:width => "100%"}
+  %tr{:valign => "top"}
+    %th{:width => "126"}
+      %span 站名
+    %th{:width => "126"}
+      %span 員工編號
+    %th{:width => "126"}
+      %span 員工姓名
+    %th{:width => "126"}
+      %span 酒測值
+  - @tests.each do |t|
+    %tr{:valiagn => "top"}
+      %td
+        %span #{@site_name}
+      %td
+        %span #{t.driver.serial}
+      %td
+        %span #{t.driver.name}
+      %td
+        %span #{t.value}
+
+  
