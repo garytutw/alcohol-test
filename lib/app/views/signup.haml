@@ -1,3 +1,22 @@
+:javascript
+  $(document).ready(function(){
+  $("#permitSelect").change(function () {
+      var int = "";
+      $("#permitSelect option:selected").each(function () {
+        pSelect = parseInt($(this).attr("value"));
+      });
+      if (pSelect > 0){
+        $("#siteSelect option[value=0]").attr('disabled','disabled');
+        // user not select a site yet
+        if ($("#siteSelect option:selected").attr("value") == '0') {
+          $("#siteSelect option[value=1]").attr('selected','selected');
+        }  
+      } else {
+       $("#siteSelect option[value=0]").removeAttr("disabled").attr('selected','selected');
+      }
+  });
+  });
+
 #wrapper
   #content
   %h1.page_title 新增帳號
@@ -21,7 +40,7 @@
     .field
       %label.label{:for => "user_site"} 所屬分站
       .collection
-        %select{:name => "user[site]"}
+        %select{:id => "siteSelect", :name => "user[site]"}
           %option{:value => 0, :selected => true} - 總公司 -
           - @sites.each do |site|  
             %option{:value => site.id} #{site.name}
@@ -29,7 +48,7 @@
     .field
       %label.label{:for => "user_permission_level"} 系統權限
       .collection
-        %select{:name => "user[permission_level]"}
+        %select{:id => "permitSelect", :name => "user[permission_level]"}
           %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
           %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 總站主管
           %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
