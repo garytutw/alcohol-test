@@ -1,12 +1,11 @@
 #wrapper
   #content
-    %h3 請選擇左列功能
+    %h1{:style => "text-align: left"} 請選擇左列功能
 #navigation
   %nav
     %ul
       %li
-        %a{:href => "/manager/signup"} 新增帳號
-      %li
-        %a{:href => "/manager/edit"} 編輯帳號
-      %li
-        %a{:href => "/manager/sitemgr"} 分站資訊維護
+        %a{:href => "/manager/edit"} 新增修改帳號
+      - if @current_user.permission_level == -1    
+        %li
+          %a{:href => "/manager/sitemgr"} 分站資訊維護

@@ -41,29 +41,36 @@
       %label.label{:for => "user_site"} 所屬分站
       .collection
         %select{:id => "siteSelect", :name => "user[site]"}
-          %option{:value => 0, :selected => true} - 總公司 -
-          - @sites.each do |site|  
-            %option{:value => site.id} #{site.name}
+          - if @current_user.permission_level == -1
+            %option{:value => 0, :selected => true} - 總公司 -
+            - @sites.each do |site|  
+              %option{:value => site.id} #{site.name}
+          - else
+            - @sites.each do |site|
+              - if site.id == @current_user.site_id
+                %option{:value => site.id} #{site.name}  
         
     .field
       %label.label{:for => "user_permission_level"} 系統權限
       .collection
         %select{:id => "permitSelect", :name => "user[permission_level]"}
-          %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
-          %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 總站主管
-          %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
-          %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
+          - if @current_user.permission_level == -1
+            %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
+            %option{:value => 0, :selected => locals["permission_level"]=='0'?true:false} 總站主管
+            %option{:value => 1, :selected => locals["permission_level"]=='1'?true:false} 分站主管
+          - else  
+            %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
     .field
       .collection
         %input{ :value => "新增帳號", :type => "submit"}
+        %input{ :name => "cancel", :value => "取消", :type => "submit"}
       
 #navigation
   %nav
     %ul
       %li
-        %a.selected{:href => "/manager/signup"} 新增帳號
-      %li
-        %a{:href => "/manager/edit"} 編輯帳號
-      %li
-        %a{:href => "/manager/sitemgr"} 分站資訊維護
+        %a.selected{:href => "/manager/edit"} 新增修改帳號
+      - if @current_user.permission_level == -1
+        %li
+          %a{:href => "/manager/sitemgr"} 分站資訊維護

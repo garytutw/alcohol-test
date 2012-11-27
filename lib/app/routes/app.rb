@@ -1,29 +1,56 @@
 require 'bcrypt'
 
 class Application
-
-	get "/manager", :auth => :admin do
+  def find_users level
+    @users = repository(:default).adapter.select(
+      "select * from users where permission_level < #{level} order by site_id ")
+  end
+  
+	get "/manager", :auth => [:admin, :auditor] do
     haml :manager
   end
   
-  get "/manager/edit", :auth => :admin do
-  	if params.empty?
-    	haml :user
+  get "/manager/edit", :auth => [:admin, :auditor] do
+    if @current_user.permission_level == -1 # admin
+      @users = repository(:default).adapter.select(
+      "select * from users where permission_level < 2 order by site_id ")
+      haml :user_list  
     else
-    	@user = User.first(:id => params[:user][:id])
-    	p @user
-    	if @user.nil?
-	  		flash[:error] = "No user found!"
-	      redirect "/manager/edit"
-  		else
-  			param = nil
-  			@sites ||= Site.all if @site.nil?
-    		haml :user
-    	end
-  	end	
+      @users = repository(:default).adapter.select(
+      "select * from users where permission_level = 2 and site_id = #{@current_user.site_id}")
+      haml :user_list    
+    end
+  	# if params.empty?
+    	# haml :user
+    # else
+    	# @user = User.first(:id => params[:user][:id])
+    	# # p @user
+    	# if @user.nil?
+	  		# flash[:error] = "No user found!"
+	      # redirect "/manager/edit"
+  		# else
+  			# param = nil
+  			# @sites ||= Site.all if @site.nil?
+    		# haml :user
+    	# end
+  	# end	
   end
   
-  post "/manager/edit", :auth => :admin do
+  get "/manager/edit/:id", :auth => [:admin, :auditor] do
+     @user = User.first(:id => params[:id])
+      # p @user
+      if @user.nil?
+        flash[:error] = "No user found!"
+        redirect "/manager/edit"
+      else
+        param = nil
+        @sites ||= Site.all if @site.nil?
+        p @user
+        haml :user
+      end
+  end
+  
+  post "/manager/edit", :auth => [:admin, :auditor] do
   	user = User.first(:id => params[:user][:id])
   	if params.has_key? "update"
   		params[:user]["site"] = Site.first(:id => params[:user][:site])
@@ -52,7 +79,7 @@ class Application
   	end
   end
   
-  get "/manager/signup", :auth => :admin do
+  get "/manager/signup", :auth => [:admin, :auditor] do
   	@sites ||= Site.all if @site.nil?
   	if params.empty?
     	haml :signup
@@ -61,7 +88,10 @@ class Application
   	end	
   end
 
-  post "/manager/signup", :auth => :admin do
+  post "/manager/signup", :auth => [:admin, :auditor] do
+    if params.has_key? "cancel"
+      redirect "/manager/edit"
+    end
   	params[:user]["site"] = Site.first(:id => params[:user][:site])
     user = User.create(params[:user])
     if user.save

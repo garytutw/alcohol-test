@@ -1,0 +1,55 @@
+:javascript
+  $(function() {
+    $("#signup").click(function() {
+      window.location = "/manager/signup";
+    });
+  });
+#wrapper
+  #report
+    %div
+      %h1{:style => "position: relative;"}
+        %span 人員列表
+        %input{:id => "signup", :type => "button", :style => "position: absolute; right: 0px;", :value => "新增帳號"}  
+    %table{:width => "100%"}
+      %tr{:valign => "top"}
+        %th{:width => "88"}
+          %span 員工序號
+        %th{:width => "126"}
+          %span 員工姓名
+        %th{:width => "126"}
+          %span 所屬分站
+        %th{:width => "126"}
+          %span 系統權限
+        %th{:width => "88"}
+          %span 編輯帳號
+      - @users.each do |usr|
+        %tr{:valign => "top"}
+          %td
+            %span #{usr.id}
+          %td
+            %span #{usr.name}
+          %td
+            %span= Site.first(:id => usr.site_id).nil? ? '' : Site.first(:id => usr.site_id).name
+          %td
+            %span
+              - case usr.permission_level
+              - when -1
+                系統管理者
+              - when 0
+                總站主管
+              - when 1
+                分站主管
+              - when 2
+                登錄人員
+          %td
+            %span  
+              %a{:href => "/manager/edit/#{usr.id}"} 修改
+    
+#navigation
+  %nav
+    %ul
+      %li
+        %a.selected{:href => "/manager/edit"} 新增修改帳號
+      - if @current_user.permission_level == -1
+        %li
+          %a{:href => "/manager/sitemgr"} 分站資訊維護
