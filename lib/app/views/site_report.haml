@@ -132,3 +132,6 @@
       - @available_dates.each do |d|
         %li
           %a{:href => "/site/#{@site_name}/#{d}", :class => d == @date.to_s && "selected"}= d            
+      - if @current_user.permission_level == 1
+        %li
+          %a{:href => "/manager/edit"} 新增修改帳號

@@ -6,6 +6,10 @@
   });
 #wrapper
   #report
+    - if @current_user.permission_level == 1
+      .breadcrumbs
+        %a{:href => "/site/#{Site.first(:id => @current_user.site_id).name}"} 日報表
+        >
     %div
       %h1{:style => "position: relative;"}
         %span 人員列表

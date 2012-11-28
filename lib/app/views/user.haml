@@ -65,8 +65,9 @@
             - if @current_user.permission_level == -1
               %option{:value => -1, :selected => @user.permission_level==-1?true:false} 系統管理者
               %option{:value => 0, :selected => @user.permission_level==0?true:false} 總站主管
+            - if @user.permission_level == 1   
               %option{:value => 1, :selected => @user.permission_level==1?true:false} 分站主管
-            - else  
+            - if @user.permission_level > 1
               %option{:value => 2, :selected => @user.permission_level==2?true:false} 登錄人員 
       %br
       .field

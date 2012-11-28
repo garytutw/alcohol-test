@@ -20,20 +20,7 @@ class Application
       "select * from users where permission_level = 2 and site_id = #{@current_user.site_id}")
       haml :user_list    
     end
-  	# if params.empty?
-    	# haml :user
-    # else
-    	# @user = User.first(:id => params[:user][:id])
-    	# # p @user
-    	# if @user.nil?
-	  		# flash[:error] = "No user found!"
-	      # redirect "/manager/edit"
-  		# else
-  			# param = nil
-  			# @sites ||= Site.all if @site.nil?
-    		# haml :user
-    	# end
-  	# end	
+  	
   end
   
   get "/manager/edit/:id", :auth => [:admin, :auditor] do
@@ -45,7 +32,6 @@ class Application
       else
         param = nil
         @sites ||= Site.all if @site.nil?
-        p @user
         haml :user
       end
   end
@@ -97,7 +83,7 @@ class Application
     if user.save
       flash[:notice] = "User account #{user.name} created!" 
       #session[:user] = user.token # no need to switch to the newly created user
-      redirect "/" 
+      redirect "/manager/edit" 
     else
     	flash[:error] = user.errors.full_messages    
       session[:errors] = user.errors.full_messages

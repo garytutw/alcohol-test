@@ -405,16 +405,16 @@ nav ul li {
 nav ul li a {
 	color: #a6351c;
 	font-size: 1.4em;
-  font-weight: bolder;
-  display: inline-block;
+    font-weight: bolder;
+    display: inline-block;
 	font-weight: normal;
-  text-align: center;
+    text-align: center;
 	letter-spacing: 0.1em;
 	padding: 32px 0px 0px 0px;
 	border: none;
-  background: url(../images/button_reg.png) no-repeat;
-  width:150px;
-  height:61px;
+    background: url(../images/button_reg.png) no-repeat;
+    width:150px;
+    height:61px;
 }
 
 nav ul li a:hover {

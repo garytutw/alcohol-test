@@ -21,9 +21,6 @@
           %b 酒精測試系統&nbsp;&nbsp;
           - if current_user
             Hi, #{current_user.name} 
-            - if current_user.permission_level == 1
-              %a{:href => "/manager/edit"}
-                帳號管理
             %a{:href => "/logout"}
               登出      
       %h2
