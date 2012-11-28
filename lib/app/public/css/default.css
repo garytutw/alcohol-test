@@ -310,7 +310,7 @@ body {
 	background:  none;
 	margin-bottom: 20px;
 	width: 960px;
-  height: 650px;
+  	height: 650px;
 	margin: 0 auto;
 	position: relative;
 	border: none;
@@ -320,11 +320,12 @@ body {
 	background: url(../images/logo_img.png) top left no-repeat;
 	position: relative;
 	top: 0px;
-	left: 10px;
+	left: 80px;
+	right: 60px;
 	width: 100%;
-  height: 118px;
+    height: 118px;
 	border: none;
-  margin-top: 2px;
+  	margin-top: 2px;
 }
 
 #logoTxt h1 b {

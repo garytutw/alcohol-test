@@ -23,23 +23,23 @@
   %form{:action => "/manager/signup", :method => "post"}
     .field
       %label.label{:for => "user_id"} 員工序號
-      .collection
+      .ui
         %input{ :id => "user_id", :name => "user[id]", :size => 10, :type => "text", :value => locals["id"]}
     .field
       %label.label{:for => "user_name"} 員工姓名
-      .collection
+      .ui
         %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => locals["name"]}
     .field
       %label.label{:for => "user_password"} 密碼
-      .collection
+      .ui
         %input{ :id => "user_password", :name => "user[password]", :size => 10, :type => "password" }
     .field
       %label.label{:for => "user_password_confirmation"} 密碼確認
-      .collection
+      .ui
         %input{ :id => "user_password_confirmation", :name => "user[password_confirmation]", :size => 10, :type => "password" }
     .field
       %label.label{:for => "user_site"} 所屬分站
-      .collection
+      .ui
         %select{:id => "siteSelect", :name => "user[site]"}
           - if @current_user.permission_level == -1
             %option{:value => 0, :selected => true} - 總公司 -
@@ -52,7 +52,7 @@
         
     .field
       %label.label{:for => "user_permission_level"} 系統權限
-      .collection
+      .ui
         %select{:id => "permitSelect", :name => "user[permission_level]"}
           - if @current_user.permission_level == -1
             %option{:value => -1, :selected => locals["permission_level"]=='-1'?true:false} 系統管理者
@@ -62,7 +62,7 @@
             %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
     .field
-      .collection
+      .ui
         %input{ :value => "新增帳號", :type => "submit"}
         %input{ :name => "cancel", :value => "取消", :type => "submit"}
       
