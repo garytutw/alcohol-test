@@ -1,9 +1,9 @@
 
 class Application
-  get '/anomaly/:site/:date', :auth => :hq do
-    @site_name = params[:site]
+  get '/anomaly/:site_id/:date', :auth => :hq do
     @date = parse_date(params[:date])
-    sr = SiteReport.first(:date => @date, SiteReport.site.name => params[:site])
+    sr = SiteReport.first(:date => @date, :site_id => params[:site_id])
+    @site_name = sr.site.name
     @tests = sr.all_anomaly_tests
     show :anomaly, :layout => false
   end

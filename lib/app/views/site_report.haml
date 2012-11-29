@@ -1,3 +1,4 @@
+-# coding: UTF-8
 :javascript
   function validate() {
     $(".buttons input").attr("disabled", "disabled");
@@ -62,7 +63,7 @@
       .errors
         - @errors.each do |k,v|
           #{v} <br/>
-    %form{:action => "/site/#{@site_name}/#{@date}", :method => "post"}
+    %form{:action => "/site/#{@site_report.site_id}/#{@date}", :method => "post"}
       .field
         %label{:for => "status"} 狀態
         .ui
@@ -131,7 +132,7 @@
     %ul
       - @available_dates.each do |d|
         %li
-          %a{:href => "/site/#{@site_name}/#{d}", :class => d == @date.to_s && "selected"}= d            
+          %a{:href => "/site/#{@site_report.site_id}/#{d}", :class => d == @date.to_s && "selected"}= d            
       - if @current_user.permission_level == 1
         %li
           %a{:href => "/manager/edit"} 新增修改帳號

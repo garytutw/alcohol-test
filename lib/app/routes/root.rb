@@ -10,7 +10,7 @@ class Application
       redirect "/report"
     else
       puts #{current_user.site}
-      redirect "/site/#{current_user.site.name}"
+      redirect "/site/#{current_user.site_id}"
     end
   end
 end

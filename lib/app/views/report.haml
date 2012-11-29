@@ -75,7 +75,7 @@
           %td
             %span
               - if r.anomaly_tests > 0
-                %a{:class => "anomaly", :href => "/anomaly/#{r.site.name}/#{@date}"}= r.anomaly_tests
+                %a{:class => "anomaly", :href => "/anomaly/#{r.site_id}/#{@date}"}= r.anomaly_tests
               - else
                 = r.anomaly_tests 
           %td
@@ -96,7 +96,7 @@
               %span 正確無誤
           %td.update_column
             %span  
-              %a{:href => "/site/#{r.site.name}/#{@date}"} 更新
+              %a{:href => "/site/#{r.site_id}/#{@date}"} 更新
 #navigation
   %nav
     %ul
