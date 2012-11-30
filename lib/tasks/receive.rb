@@ -41,7 +41,7 @@ task :receive do
         when '員工姓名'
           tester[:name] = r[1]
         when '檢測結果'
-          record[:value] = Float(r[1])
+          record[:value] = BigDecimal(r[1])
         when '日期', '時間'
           if r[0] == '日期' then tmp[0] = r[1]
           else tmp[1] = r[1] + ':' + r[2] + ':' + r[3]
@@ -50,9 +50,10 @@ task :receive do
             record[:time] = Time.parse(tmp[0] + ' ' + tmp[1])
           end  
         when '檢測地點'
-          record[:site] = Site.first_or_create({ :name => r[1]}, { :seq => 1})
+          record[:site] = Site.first_or_create({ :name => r[1]}, { :seq => 1})  
         else
-          raise "Bad email content which contains: #{r[0]} \n"
+          puts "[MAIL] Bad email content which contains: #{r[0]} \n"
+          # raise "Bad email content which contains: #{r[0]} \n"
         end
       end
       # Handling attachment
