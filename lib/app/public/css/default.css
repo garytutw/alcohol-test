@@ -310,7 +310,6 @@ body {
 	background:  none;
 	margin-bottom: 20px;
 	width: 960px;
-  	height: 650px;
 	margin: 0 auto;
 	position: relative;
 	border: none;
@@ -577,4 +576,7 @@ margin: 15px;
 }
 #report tr.validate_err {
 background-color: #B2F5F5;
+}
+#print_footer {
+display: none;
 }
