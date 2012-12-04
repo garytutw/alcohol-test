@@ -11,6 +11,7 @@ require_relative 'site'
 require_relative 'site_report'
 require_relative 'site_report_log'
 require_relative 'alcohol_test'
+require_relative 'site_notifier'
 
 DataMapper.finalize
 
