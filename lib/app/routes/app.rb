@@ -148,7 +148,8 @@ class Application
       if site.save
         redirect "/manager/sitemgr"
       else
-        flash[:error] = site.errors.full_messages     
+        flash[:error] = site.errors.full_messages
+        redirect "/manager/sitemgr"     
       end
     end  
   end

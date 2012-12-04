@@ -24,19 +24,26 @@
     var num = #{@sites.length};
     var newNum = new Number(num + 1);
     $('ul#sites').append('<li class="ui-state-default", id="site_' + newNum +
-    '"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite" type="text" name="site"></input></li>');
+    '"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite" type="text" name="site" autofocus="autofocus"></input></li>');
   });
   });
 
 #wrapper
   #content
-    %h1{:style => "text-align: left"} 請移動分站項目(箭頭處)以調整報表順序
+    %span{:style => "text-align: left"} 
+      %ul
+        %li 請移動分站項目(箭頭處)以調整報表順序
+        %li 新增分站請點擊新增按鈕，填入分站名稱並按&lt;Enter&gt;確定送出
     %form{:id => "siteUpdate", :action => "/manager/sitenew", :method => "post"}
       %ul#sites
         - @sites.each do |site| 
           %li.ui-state-default{:id => "site_" + site.id.to_s}
             %span.handle.ui-icon.ui-icon-arrowthick-2-n-s
             #{site.name}
+      %br
+        .field
+          .collection
+            %input{ :id => "btnAdd", :value => "新增分站", :type => "button"}      
   
 #navigation
   %nav
