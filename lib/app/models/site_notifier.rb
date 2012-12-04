@@ -5,6 +5,6 @@ class SiteNotifier
   property :id,     Serial
   property :email,  String, :required => true, :length => 40
 
-  belong_to :site
+  belongs_to :site
 
 end
