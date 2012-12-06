@@ -1,0 +1,27 @@
+:css
+  #notifiers {
+    list-style-type: none;
+  }
+  #notifiers li {
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    padding-left: 1.5em;
+    font-size: 1.4em;
+    height: 18px;
+    text-align: left;
+    cursor: pointer;
+  }
+  #notifiers li input {
+    font-size: 0.6em;
+  }
+  #notifiers li img { display: none;}
+  #notifiers li:hover img {display: inline; float: right;}
+
+%ul#notifiers
+  - @notifiers.each do |n|
+    %li{:site_id => @site.id, :nid => n.id, :class => 'ui-state-default'}
+      %span{:site_id => @site.id, :nid => n.id} #{n.email}
+      %img.delete_btn{:src => "/images/delete_mark.gif"}
+%input{:value => "新增", :type => "button"}
+
+
