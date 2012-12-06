@@ -35,7 +35,7 @@
       success: function(data) {
         tag.html(data).dialog({
           modal: true, 
-          title: li.text().trim() + ' 異常通知清單',
+          title: li.text().trim() + ' 異常通知電子郵件清單',
           close: function(e, ui) {
             $(this).remove(); 
           },
@@ -53,7 +53,9 @@
               $(this).blur();
             }
           });
-          $('#newEmail ~ img').click(clickDelete);
+          $('#newEmail ~ img').click(function() {
+            $(this).parent().remove();
+          });
         });
       }
     });
@@ -122,6 +124,7 @@
     %span{:style => "text-align: left"} 
       %ul
         %li 請移動分站項目(箭頭處)以調整報表順序
+        %li 請點擊分站項目以管理異常通知電子郵件清單
         %li 新增分站請點擊新增按鈕，填入分站名稱並按&lt;Enter&gt;確定送出
     %form{:id => "siteUpdate", :action => "/manager/sitenew", :method => "post"}
       %ul#sites
