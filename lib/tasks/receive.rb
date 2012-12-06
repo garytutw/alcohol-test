@@ -6,9 +6,40 @@ MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
 IMG_DIR = 'photos'
 
 config = YAML.load_file('config/mail.yaml')
+abncfg = YAML.load_file('config/app.yaml')
 
 desc 'Receiving alcohol tests from POP3 server'
 task :receive do
+  def get_recipients site_id
+    cclist = ''
+    SiteNotifier.all(:site_id => site_id).each do |notify|
+      cclist += notify.email + ","
+    end
+    cclist.chomp(",")  
+  end
+  
+  def check_anomaly(record, limit, rule)
+    begin
+      if record[:value] > limit && !!(record[:driver].serial.to_s =~ rule)
+        filename = record[:image]
+        Mail.deliver do
+          from    'alcoholtest@ubus.com.tw'
+          to      get_recipients record[:site].id
+          subject "[異常酒精檢測結果] 員工編號:#{record[:driver].serial} 員工姓名:#{record[:driver].name}" + 
+          " 檢測結果:#{record[:value]} 日期時間:#{record[:time]} 檢測地點:#{record[:site].name}"
+          text_part do
+            content_type 'text/plain; charset=UTF-8'
+            body    "酒測圖片如附件"
+          end
+          add_file "#{File.join(IMG_DIR, filename[0..1], filename[2..3], filename)}"
+        end
+      end
+    rescue Exception => e
+      # do nothing ~
+      print "Error sending anomaly email at " + Time.now.to_s + "::: " + e.message + "\n"
+    end  
+  end
+  
   def create_directory_if_not_exists(directory_name)
     Dir.mkdir(directory_name) unless File.exists?(directory_name)
     return directory_name
@@ -78,6 +109,11 @@ task :receive do
       puts "[DB] Inserting alcohol test record: #{record}"
       at = AlcoholTest.new(record)
       if at.save
+        # check anomaly of this received mail
+        Thread.new do
+          check_anomaly(record, Float(abncfg["anomaly_bound"]), Regexp.new(abncfg["tester_serial"]))  
+        end  
+        
         if config['delete_from_server']
           mail.mark_for_delete = true    # delete the mail from server
         end
