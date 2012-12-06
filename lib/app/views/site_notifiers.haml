@@ -20,7 +20,8 @@
 %ul#notifiers
   - @notifiers.each do |n|
     %li{:site_id => @site.id, :nid => n.id, :class => 'ui-state-default'}
-      %span{:site_id => @site.id, :nid => n.id} #{n.email}
+      %span #{n.email}
+      %input{:type => 'text', :style => 'display:none'} 
       %img.delete_btn{:src => "/images/delete_mark.gif"}
 %input{:value => "新增", :type => "button"}
 
