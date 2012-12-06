@@ -47,8 +47,6 @@ class Application
           @site_report.send("#{k.to_s}=", nv)
         end
       end
-      puts log
-      puts state_changed
       if log[:changes] || state_changed
         @site_report.save
         if log[:changes] || log[:message]

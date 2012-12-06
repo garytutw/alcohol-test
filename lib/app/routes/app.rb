@@ -154,4 +154,27 @@ class Application
     end  
   end
   
+  get '/manager/notifier/:site_id', :auth => :admin do
+    @site = Site.get(params[:site_id])
+    @notifiers = @site.site_notifiers
+    show :site_notifiers, :layout => false
+  end
+
+  post '/manager/notifier/:site_id/:nid', :auth => :admin do
+    if params[:nid] == 'newEmail'
+      sn = SiteNotifier.create(:site_id => params[:site_id], :email => params[:email])
+      sn.id.to_s 
+    else
+      sn = SiteNotifier.get(params[:nid].to_i)
+      sn.email = params[:email]
+      sn.save
+      sn.id.to_s
+    end
+  end
+  
+  delete '/manager/notifier/:site_id/:nid', :auth => :admin do
+    SiteNotifier.get(params[:nid]).destroy
+    ""
+  end
+
 end

@@ -23,11 +23,100 @@
   $('#btnAdd').click(function() {
     var num = #{@sites.length};
     var newNum = new Number(num + 1);
-    $('ul#sites').append('<li class="ui-state-default", id="site_' + newNum +
+    $('ul#sites').append('<li class="ui-state-default" id="site_' + newNum +
     '"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite" type="text" name="site" autofocus="autofocus"></input></li>');
   });
+  $('#sites li').click(function() {
+    var tag = $("<div></div>");
+    var li = $(this);
+    var id = li.attr('id').substr(5);
+    $.ajax({
+      url: '/manager/notifier/' + id,
+      success: function(data) {
+        tag.html(data).dialog({
+          modal: true, 
+          title: li.text().trim() + ' 異常通知清單',
+          close: function(e, ui) {
+            $(this).remove(); 
+          },
+        }).dialog('open');
+        $('#notifiers').selectable();
+        $('#notifiers li span').click(clickSpan);
+        $('#notifiers .delete_btn').click(clickDelete);
+        $('#notifiers ~ input').click(function() {
+          $("#notifiers").append($('<li class="ui-state-default" site_id="' + id + '" nid="newEmail">' +
+                                   '<input id="newEmail" type="text" name="email" autofocus="autofocus"></input>' +
+                                   '<img class="delete_btn" src="/images/delete_mark.gif"/></li>'));
+          $('#newEmail').blur(blurInput);
+          $('#newEmail').keypress(function(e) {
+            if (e.which == 13) {
+              $(this).blur();
+            }
+          });
+          $('#newEmail ~ img').click(clickDelete);
+        });
+      }
+    });
   });
-
+  });
+  function clickDelete() {
+    var input = $(this);
+    var site_id = input.parent().attr('site_id');
+    var nid = input.parent().attr('nid');
+    $.ajax({
+      url: '/manager/notifier/' + site_id + '/' + nid, 
+      type: "DELETE",
+      success: function() {
+        input.parent().remove();
+      }
+    });
+  }
+  function clickSpan() {
+    var value = $(this).html();
+    var input = $('<input />', {'type': 'text', 'value': value, 'ovalue': value});
+    input.blur(blurInput);
+    input.keypress(function(e) {
+      if (e.which == 13) {
+        input.blur();
+      }
+    });
+    $(this).parent().append(input);
+    $(this).remove();
+    input.focus();
+  }
+  function checkEmail(email) {
+    var re =  /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i
+    return re.test(email);
+  }
+  function blurInput() {
+    var input = $(this);
+    if (input.val() == input.attr('ovalue')) {
+      var span = $('<span />'); 
+      span.click(clickSpan);
+      input.parent().append(span.html(input.val()));
+      input.remove();
+      return;
+    }
+    if (!checkEmail(input.val())) {
+      alert("電子信箱格式不正確");
+      input.focus();
+      return;
+    }
+    var site_id = input.parent().attr('site_id');
+    var nid = input.parent().attr('nid');
+    $.ajax({
+      url: '/manager/notifier/' + site_id + '/' + nid, 
+      type: "POST",
+      data: {'email': input.val()},
+      success: function(data) {
+        var span = $('<span />'); 
+        span.click(clickSpan);
+        input.parent().attr('nid', data);
+        input.parent().append(span.html(input.val()));
+        input.remove();
+      }
+    });
+  }
 #wrapper
   #content
     %span{:style => "text-align: left"} 
