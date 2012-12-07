@@ -19,10 +19,11 @@ task :receive do
   end
   
   def check_anomaly(record, limit, rule)
+    puts "[Debug] Checking anomaly rules: record[:value] > limit => #{record[:value] > limit} && !!(record[:driver].serial.to_s =~ rule) => #{!!(record[:driver].serial.to_s =~ rule)}"
     begin
       if record[:value] > limit && !!(record[:driver].serial.to_s =~ rule)
         filename = record[:image]
-        Mail.deliver do
+        @email = Mail.new do
           from    'alcoholtest@ubus.com.tw'
           to      get_recipients record[:site].id
           subject "[異常酒精檢測結果] 員工編號:#{record[:driver].serial} 員工姓名:#{record[:driver].name}" + 
@@ -31,9 +32,11 @@ task :receive do
             content_type 'text/plain; charset=UTF-8'
             body    "酒測圖片如附件"
           end
-          add_file "#{File.join(IMG_DIR, filename[0..1], filename[2..3], filename)}"
+          add_file "#{File.join(File.dirname(__FILE__), '../..', IMG_DIR, filename[0..1], filename[2..3], filename)}"
         end
-      end
+        @email.deliver!
+        puts "[Debug] Send Anomaly Mail Done!!"
+      end # end if
     rescue Exception => e
       # do nothing ~
       print "Error sending anomaly email at " + Time.now.to_s + "::: " + e.message + "\n"
@@ -106,14 +109,12 @@ task :receive do
    
       record[:driver] = Driver.first_or_create(tester)
       record[:image] = filename  
-      puts "[DB] Inserting alcohol test record: #{record}"
+      # puts "[DB] Inserting alcohol test record: #{record}"
       at = AlcoholTest.new(record)
       if at.save
         # check anomaly of this received mail
-        Thread.new do
-          check_anomaly(record, Float(abncfg["anomaly_bound"]), Regexp.new(abncfg["tester_serial"]))  
-        end  
-        
+        check_anomaly(record, Float(abncfg["anomaly_bound"]), Regexp.new(abncfg["tester_serial"]))   
+  
         if config['delete_from_server']
           mail.mark_for_delete = true    # delete the mail from server
         end

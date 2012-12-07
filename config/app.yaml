@@ -1,4 +1,4 @@
 anomaly_bound: 0.0
 # Serial number which starts with 1 will not be checked for anomaly mail sending
-tester_serial: ^(1)\d*
+tester_serial: ^(?!1)\d*
 
