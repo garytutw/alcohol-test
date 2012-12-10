@@ -22,11 +22,33 @@
 
     $("a.anomaly").click(function() {
       var tag = $("<div></div>");
+      var site = $(this).parents('tr').find('td span')[1].innerHTML;
+      var site_id = this.pathname.split('/')[2];
+      var date = $('#datepicker').val();
       $.ajax({
         url: this.href,
         success: function(data) {
-          tag.html(data).dialog({modal: true, title: '酒測超標清單'}).dialog('open');
-        }
+          tag.html(data).dialog({
+            modal: true,
+            title: site + ' 酒測超標清單 ' + date,
+            width: 350,
+            close: function() {
+              $(this).remove();
+            },
+          }).dialog('open');
+          $('#anomalys tr').not(':first').hover(function() {
+            $(this).toggleClass('overrow');
+          }, function() {
+            $(this).toggleClass('overrow');
+          }).css('cursor', 'pointer').click(function() {
+            $(this).parent().children().removeClass('selected');
+            $(this).addClass('selected');
+            $('#driver_id').text($(this).find('td span:first').text());
+            var name = $(this).attr('image');
+            $('#anomaly_photo_div').empty().append(
+              '<img width="300" src="/photos/' + name.substr(0, 2) + '/' + name.substr(2, 2) + '/' + name + '"/>');
+          });
+        },
       });
       return false;
     });

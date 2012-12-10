@@ -1,7 +1,12 @@
-%table{:width => "100%"}
+:css
+  tr.overrow {
+    background-color: #FFFF99;
+  }
+  tr.selected {
+    background-color: #FFFF00;
+  }
+%table{:id => "anomalys", :width => "100%"}
   %tr{:valign => "top"}
-    %th{:width => "126"}
-      %span 站名
     %th{:width => "126"}
       %span 員工編號
     %th{:width => "126"}
@@ -9,14 +14,13 @@
     %th{:width => "126"}
       %span 酒測值
   - @tests.each do |t|
-    %tr{:valiagn => "top"}
-      %td
-        %span #{@site_name}
+    %tr{:valiagn => "top", :image => t.image}
       %td
         %span #{t.driver.serial}
       %td
         %span #{t.driver.name}
       %td
         %span #{t.value}
-
-  
+#anonamy_photo
+  #driver_id
+  #anomaly_photo_div 
