@@ -8,6 +8,8 @@
 %table{:id => "anomalys", :width => "100%"}
   %tr{:valign => "top"}
     %th{:width => "126"}
+      %span 時間
+    %th{:width => "126"}
       %span 員工編號
     %th{:width => "126"}
       %span 員工姓名
@@ -16,9 +18,11 @@
   - @tests.each do |t|
     %tr{:valiagn => "top", :image => t.image}
       %td
+        %span #{format_time(t.time)}
+      %td
         %span #{t.driver.serial}
       %td
-        %span #{t.driver.name}
+        %span.driver_name #{t.driver.name}
       %td
         %span #{t.value}
 #anonamy_photo

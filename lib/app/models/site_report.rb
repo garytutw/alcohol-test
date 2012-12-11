@@ -55,7 +55,7 @@ class SiteReport
     dt_upper = ((date + 1).to_time - 1).to_datetime
     dt_lower = date.to_time.to_datetime
     AlcoholTest.all(:site_id => site_id, :time => dt_lower..dt_upper,
-                    :value.gt => @@app_config["anomaly_bound"]).sort_by {|t| t.driver.serial}
+                    :value.gt => @@app_config["anomaly_bound"]).sort_by {|t| t.time}
   end
 
   def inputter_name

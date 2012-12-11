@@ -31,4 +31,8 @@ module Helpers
     name = @@field_names[change["f"]] || change["f"]
     "欄位: #{name}, #{change["ov"]} ==> #{change["nv"]}"
   end
+
+  def format_time(time)
+    time.strftime('%H:%M:%S')
+  end
 end
