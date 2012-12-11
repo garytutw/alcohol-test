@@ -43,7 +43,7 @@
           }).css('cursor', 'pointer').click(function() {
             $(this).parent().children().removeClass('selected');
             $(this).addClass('selected');
-            $('#driver_id').text($(this).find('td span:first').text());
+            $('#driver_id').text($(this).find('td span.driver_id').text());
             var name = $(this).attr('image');
             $('#anomaly_photo_div').empty().append(
               '<img width="300" src="/photos/' + name.substr(0, 2) + '/' + name.substr(2, 2) + '/' + name + '"/>');
