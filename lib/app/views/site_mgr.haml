@@ -43,9 +43,10 @@
           if (e.keyCode === $.ui.keyCode.ESCAPE) {
             var inp = $("#notifiers li input:visible");
             if (inp.length > 0) {
-              if (inp.parent().attr('nid') == 'newEmail')
+              if (inp.parent().attr('nid') == 'newEmail') {
                 inp.parent().remove();
-              else 
+                $('#btnAddNotifier').attr('disabled', false);
+              } else 
                 spanOn(inp.parent(), true);
               e.stopPropagation();
             }
@@ -59,7 +60,7 @@
           }
         });
         $('#notifiers li img').click(clickDelete);
-        $('#notifiers ~ input').click(function() {
+        $('#btnAddNotifier').click(function() {
           var li = $("#notifiers").append($('<li class="ui-state-default" site_id="' + id + '" nid="newEmail">' +
                                    '<span style="display:none;"></span>' +
                                    '<input type="text" name="email" autofocus="autofocus"></input>' +
@@ -72,7 +73,9 @@
           });
           li.children('img').click(function() {
             $(this).parent().remove();
+            $('#btnAddNotifier').attr('disabled', false);
           });
+          $('#btnAddNotifier').attr('disabled', true);
         });
       }
     });
@@ -103,6 +106,7 @@
       $(this).children('img').css('display', 'none');
     });
     input.focus();
+    $('#btnAddNotifier').attr('disabled', 'disabled');
   }
   function checkEmail(email) {
     var re =  /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i
@@ -127,11 +131,17 @@
       }, function() {
       $(this).children('img').css('display', 'none');
     });
+    $('#btnAddNotifier').attr('disabled', false);
   }
   function blurInput() {
     var input = $(this);
     if (input.val() == input.attr('ovalue')) {
       spanOn(input.parent());
+      return;
+    }
+    if (input.val().trim() == '' && input.parent().attr('nid') == 'newEmail') {
+      input.parent().remove();
+      $('#btnAddNotifier').attr('disabled', false);
       return;
     }
     if (!checkEmail(input.val())) {
