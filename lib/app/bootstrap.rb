@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
@@ -29,7 +30,7 @@ class Application < Sinatra::Base
 	   		if !logged_in?
 	     		redirect "/login", 303
 	     	else
-	     		flash[:warning] = "You are not authorize to access this page!"
+	     		flash[:warning] = "權限不足無法存取此頁面！"
 	     	  redirect "/", 303
 	     	end
 	   	end

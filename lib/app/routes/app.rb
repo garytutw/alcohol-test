@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'bcrypt'
 
 class Application
@@ -27,7 +28,7 @@ class Application
      @user = User.first(:id => params[:id])
       # p @user
       if @user.nil?
-        flash[:error] = "No user found!"
+        flash[:error] = "此員工帳號不存在"
         redirect "/manager/edit"
       else
         param = nil
@@ -46,7 +47,7 @@ class Application
         user_attributes.delete("password_confirmation")
       end
       if user.update(user_attributes)
-        flash[:notice] = "User #{user.name} updated."
+        flash[:notice] = "使用者 #{user.name} 更新完成！"
         redirect '/manager/edit'
       else
         flash[:error] = user.errors.full_messages
@@ -54,7 +55,7 @@ class Application
       end
   	elsif params.has_key? "delete"
   	  if user.destroy
-  	  	flash[:notice] = "Delete #{user.name} successfully!" 
+  	  	flash[:notice] = "使用者 #{user.name} 刪除成功！" 
       	redirect "/manager/edit" 
   	  else 
   	  	flash[:error] = user.errors.full_messages    
@@ -81,7 +82,7 @@ class Application
   	params[:user]["site"] = Site.first(:id => params[:user][:site])
     user = User.create(params[:user])
     if user.save
-      flash[:notice] = "User account #{user.name} created!" 
+      flash[:notice] = "員工帳號 #{user.name} 新增完成！" 
       #session[:user] = user.token # no need to switch to the newly created user
       redirect "/manager/edit" 
     else
@@ -106,11 +107,11 @@ class Application
         response.set_cookie "user", {:value => user.token, :expires => (Time.now + 24*60*60)} if params[:remember_me]
         redirect_last
       else
-        flash[:error] = "ID/Password combination does not match"
+        flash[:error] = "員工序號與密碼不符"
         redirect "/login?id=#{params[:id]}"
       end
     else
-      flash[:error] = "That serial ID is not recognised"
+      flash[:error] = "員工帳號不存在"
       redirect "/login?id=#{params[:id]}"
     end
   end
