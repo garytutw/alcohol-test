@@ -39,19 +39,27 @@ class Application
   
   post "/manager/edit", :auth => [:admin, :auditor] do
   	user = User.first(:id => params[:user][:id])
+  	if user.nil? # incase booked url to delete user account twice!
+  	  redirect "/manager/edit"
+  	end
   	if params.has_key? "update"
   		params[:user]["site"] = Site.first(:id => params[:user][:site])
-      user_attributes = params[:user]
-      if params[:user][:password] == "" # not set in web page
-        user_attributes.delete("password")
-        user_attributes.delete("password_confirmation")
-      end
-      if user.update(user_attributes)
+      # user_attributes = params[:user]
+      # if params[:user][:password] == "" # not set in web page, keep the original passwd
+        # user_attributes.delete("password")
+        # user_attributes.delete("password_confirmation")
+      # end
+      if user.update(params[:user])
         flash[:notice] = "使用者 #{user.name} 更新完成！"
         redirect '/manager/edit'
-      else
-        flash[:error] = user.errors.full_messages
-        redirect "/manager/edit"
+      else # replace original dm-validation errors with Chinese ones
+        if user.errors[:password].to_s.include? "does not match"
+          user.errors[:password] = ["密碼與密碼確認不符！"]
+        else user.errors[:password].to_s.include? "characters long"
+          user.errors[:password] = ["密碼長度至少需為四個字元！"] 
+        end
+        flash[:error] = user.errors.full_messages    
+        redirect "/manager/edit/#{user.id}"
       end
   	elsif params.has_key? "delete"
   	  if user.destroy
@@ -86,6 +94,26 @@ class Application
       #session[:user] = user.token # no need to switch to the newly created user
       redirect "/manager/edit" 
     else
+      # replace original dm-validation errors with Chinese ones
+      unless user.errors[:password].nil?
+        if user.errors[:password].to_s.include? "does not match"
+          user.errors[:password] = ["密碼與密碼確認不符！"]
+        elsif user.errors[:password].to_s.include? "characters long"
+          user.errors[:password] = ["密碼長度至少需為四個字元！"]
+        end
+      end
+      unless user.errors[:id].nil?
+        if user.errors[:id].to_s.include? "blank"
+          user.errors[:id] = ["員工序號不可為空值！"]
+        elsif user.errors[:id].to_s.include? "taken"
+          user.errors[:id] = ["此員工序號已存在系統帳號中！"]
+        end
+      end
+      unless user.errors[:name].nil?
+        if user.errors[:name].to_s.include? "blank"
+          user.errors[:name] = ["員工姓名不可為空值！"]
+        end
+      end
     	flash[:error] = user.errors.full_messages    
       session[:errors] = user.errors.full_messages
       redirect "/manager/signup?" + hash_to_query_string(params[:user])
