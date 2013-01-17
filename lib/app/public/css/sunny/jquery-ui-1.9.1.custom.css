@@ -165,7 +165,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited { color: #381f00; text-decoration: none; }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #655e4e; background: #ffffff url(images/ui-bg_inset-soft_30_ffffff_1x100.png) 50% 50% repeat-x; font-weight: bold; color: #0074c7; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #0074c7; text-decoration: none; }
-
+.ui-state-deactive, .ui-widget-content .ui-state-deactive, .ui-widget-header .ui-state-deactive { border: 1px solid #d19405; background: #c0c0c0 url(images/ui-bg_gloss-wave_100_c0c0c0_500x100.png) 50% 50% repeat-x; font-weight: bold; color: #4c3000; }
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #eeb420; background: #fff9e5 url(images/ui-bg_gloss-wave_90_fff9e5_500x100.png) 50% top repeat-x; color: #1f1f1f; }

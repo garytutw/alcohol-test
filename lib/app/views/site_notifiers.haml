@@ -16,13 +16,32 @@
   }
   #notifiers li img { display: none;}
   #notifiers li:hover img {display: inline; float: right;}
+  .head {
+    text-align: left;
+    position: relative;
+  }
+  .fncell {
+    position: relative;  
+    left: 10px;
+  }
+%h5.head
+  %span
+    1. 隱藏分站於日報表中
+    %span.fncell
+      - if @site.active
+        %input{:id => 'activation', :type => "checkbox"}
+      - else  
+        %input{:id => 'activation', :type => "checkbox", :checked => true}  
 
-%ul#notifiers
-  - @notifiers.each do |n|
-    %li{:site_id => @site.id, :nid => n.id, :class => 'ui-state-default'}
-      %span #{n.email}
-      %input{:type => 'text', :style => 'display:none'} 
-      %img.delete_btn{:src => "/images/delete_mark.gif"}
-%input{:id => 'btnAddNotifier', :value => "新增", :type => "button"}
-
+%h5.head
+  %span
+    2. 異常通知電子郵件清單
+    %span.fncell
+      %input{:id => 'btnAddNotifier', :value => "新增", :type => "button"}
+  %ul#notifiers
+    - @notifiers.each do |n|
+      %li{:site_id => @site.id, :nid => n.id, :class => 'ui-state-default'}
+        %span #{n.email}
+        %input{:type => 'text', :style => 'display:none'} 
+        %img.delete_btn{:src => "/images/delete_mark.gif"}
 

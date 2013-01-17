@@ -5,6 +5,7 @@ class Site
   property :id,     Serial
   property :name,   String, :required => true, :length => 40
   property :seq,    Integer, :required => true
+  property :active, Boolean, :default => true
 
   has n, :alcohol_tests
   has n, :site_reports

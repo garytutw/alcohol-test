@@ -16,7 +16,7 @@
     complete: function(request){
     $('#sites').effect('highlight');
     },
-    url: '/site/sort'}) // end ajax 
+    url: '/manager/site/sort'}) // end ajax 
     }
   });
   // Code for new site
@@ -35,9 +35,10 @@
       success: function(data) {
         tag.html(data).dialog({
           modal: true, 
-          title: li.text().trim() + ' 異常通知電子郵件清單',
+          title: li.text().trim() + ' 分站細項設定',
           close: function(e, ui) {
-            $(this).remove(); 
+            $(this).remove();
+            location.reload(true); 
           },
         }).dialog('open').on('keydown', function(e) {
           if (e.keyCode === $.ui.keyCode.ESCAPE) {
@@ -59,6 +60,7 @@
             $(this).blur();
           }
         });
+
         $('#notifiers li img').click(clickDelete);
         $('#btnAddNotifier').click(function() {
           var li = $("#notifiers").append($('<li class="ui-state-default" site_id="' + id + '" nid="newEmail">' +
@@ -76,6 +78,17 @@
             $('#btnAddNotifier').attr('disabled', false);
           });
           $('#btnAddNotifier').attr('disabled', true);
+        });
+        // 分站隱藏設定
+        $('input#activation').change(function() {
+          var checked = $('input#activation').attr('checked')=='checked'
+          $.ajax({
+            type: 'post',
+            url: '/manager/sitemgr/' + id + '/' + checked,
+            success: function() {
+             ;
+            },
+          }) // end ajax
         });
       }
     });
@@ -167,19 +180,19 @@
     %span{:style => "text-align: left"} 
       %ul
         %li 請移動分站項目(箭頭處)以調整報表順序
-        %li 請點擊分站項目以管理異常通知電子郵件清單
+        %li 請點擊分站項目以管理分站細項設定
         %li 新增分站請點擊新增按鈕，填入分站名稱並按&lt;Enter&gt;確定送出
     %form{:id => "siteUpdate", :action => "/manager/sitenew", :method => "post"}
       %ul#sites
-        - @sites.each do |site| 
-          %li.ui-state-default{:id => "site_" + site.id.to_s}
+        - @sites.each do |site|
+          %li{:id => "site_" + site.id.to_s, :class => site.active? ? 'ui-state-default' : 'ui-state-deactive'}
             %span.handle.ui-icon.ui-icon-arrowthick-2-n-s
             #{site.name}
+              
       %br
         .field
           .collection
             %input{ :id => "btnAdd", :value => "新增分站", :type => "button"}      
-  
 #navigation
   %nav
     %ul

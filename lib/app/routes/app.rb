@@ -160,7 +160,45 @@ class Application
     haml :site_mgr
   end
   
-  post "/site/sort" do
+  post "/manager/sitemgr/:site_id/:checked", :auth => :admin do
+    deact_site = Site.get(params[:site_id])
+    @sites = Site.all
+    if params[:checked] == 'true'
+      deact_site.active = false
+      org_seq = deact_site.seq
+      @sites.each do |site|
+        if site.seq > org_seq
+          site.seq = site.seq - 1
+          if !site.save
+            puts site.errors.full_messages
+          end
+        end  
+      end
+      # move the deactive site to the last of the sequence
+      deact_site.seq = @sites.size 
+      if !deact_site.save
+        puts deact_site.errors.full_messages
+      end
+    elsif
+      deact_site.active = true
+      org_seq = repository(:default).adapter.select(
+      "select min(seq) from sites where active='f'")[0]
+      @sites.each do |site|
+        if site.seq >= org_seq
+          site.seq = site.seq + 1
+          if !site.save
+            puts site.errors.full_messages
+          end
+        end  
+      end
+      deact_site.seq = org_seq
+      if !deact_site.save
+        puts deact_site.errors.full_messages
+      end
+    end # end if - elsif
+  end
+  
+  post "/manager/site/sort", :auth => :admin do
   	@sites ||= Site.all if @site.nil?
     @sites.each do |site|
       site.seq = params['site'].index(site.id.to_s) + 1
