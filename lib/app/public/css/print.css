@@ -15,8 +15,8 @@ html, body {
 }
 #print_footer {
 display: inline;
-position: absolute;
-bottom: 0;
-right: 0;
 font-size: 14px;
+}
+img.ui-datepicker-trigger {
+display: none;
 }
