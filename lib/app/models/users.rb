@@ -16,7 +16,7 @@ class User
   validates_presence_of         :password, :unless => Proc.new { |t| t.password_hash }
   validates_presence_of         :password_confirmation, :unless => Proc.new { |t| t.password_hash }
   validates_confirmation_of     :password
-  validates_length_of           :password, :min => 4
+  #validates_length_of           :password, :min => 4
   validates_uniqueness_of :id
 	
   def password=(pass)
