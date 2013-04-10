@@ -35,8 +35,10 @@ class Application
     @errors, state_changed = authorize_update(current_user, @site_report, log)
     @errors.merge! validate(params["site_report"])
     if @errors.size > 0
+      flash[:error] = @errors[:authorize] 
       @status_text = params[:status]
-      @site_report = OpenStruct.new params[:site_report]
+      # @site_report = OpenStruct.new params[:site_report]
+      redirect "/site/" + params[:site_id] + "/" + params[:date]
     else
       [:total_trips, :operator_tests, :trainees, :pumpings, :repeats].each do |k|
         ov = @site_report.send(k)

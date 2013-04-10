@@ -1,3 +1,4 @@
+#encoding: utf-8
 module Helpers
 
   # Convert a hash to a querystring for form population
@@ -28,7 +29,7 @@ module Helpers
     if session[:user]
       return true
     else
-      flash[:notice] =  "Login required to view this page"
+      flash[:notice] =  "請先登入以存取程式頁面！"
       session[:redirect_to] = request.fullpath
       redirect "/login"
       return false
@@ -40,7 +41,7 @@ module Helpers
     if current_user && is_admin?
       return true
     else
-      flash[:notice] =  "Admin required to view this page"
+      flash[:notice] =  "需有管理者權限以存取此頁面！"
       redirect "/"
       return false
     end
