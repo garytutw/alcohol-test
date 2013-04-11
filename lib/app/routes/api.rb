@@ -1,8 +1,8 @@
 
 class Application
 
-  put '/ALCDATA.TDB' do
-    filename = 'lib/app/public/ALCDATA.TDB'
+  put '/MASTER.TDB' do
+    filename = 'lib/app/public/MASTER.TDB'
     username = request.env['HTTP_USERNAME']
     password = request.env['HTTP_PASSWORD']
     if user = User.first(:id => username) and user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
