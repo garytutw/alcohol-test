@@ -215,6 +215,9 @@ class Application
       if site.save
         redirect "/manager/sitemgr"
       else
+        if site.errors[:name].to_s.include? "blank"
+          site.errors[:name] = ["分站名稱不可為空值！"]
+        end
         flash[:error] = site.errors.full_messages
         redirect "/manager/sitemgr"     
       end

@@ -25,6 +25,7 @@
     var newNum = new Number(num + 1);
     $('ul#sites').append('<li class="ui-state-default" id="site_' + newNum +
     '"><span class="handle ui-icon ui-icon-arrowthick-2-n-s"></span><input id="newSite" type="text" name="site" autofocus="autofocus"></input></li>');
+    $('#btnAdd').attr('disabled', true);
   });
   $('#sites li').click(function() {
     var tag = $("<div></div>");
