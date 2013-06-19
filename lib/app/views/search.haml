@@ -1,0 +1,48 @@
+:javascript
+  $(function() {
+    $("#accordion").accordion({
+      collapsible: true
+    });
+    $.datepicker.setDefaults(
+      $.extend(
+        $.datepicker.regional['zh-TW'],
+        {'dateFormat': 'yy-mm-dd'}
+      )
+    );
+    $("#site_datepicker input").datepicker({
+      showOn: "button",
+      buttonImage: "/images/calendar.gif",
+      buttonImageOnly: true,
+      maxDate: "#{@max_date}",
+      minDate: "#{@min_date}",
+    });
+  });
+#wrapper
+  #report
+    %div
+      %h2{:style => "position: relative;"}
+        %span 搜尋
+    #accordion
+      %h3 分站搜尋
+      #site_search
+        #site_select
+          %span 分站:
+          %select{:name => 'siteid'}
+            - @sites.each do |s|
+              %option{:value => "#{s.id}"} #{s.name}
+        #site_datepicker
+          %span 日期:
+          %input{:type  => 'button', :diabled => 'disabled', :value => @max_date}
+        %div
+          %input{:type => 'button', :value => '搜尋'}
+      %h3 員工搜尋
+      #emp_search
+        ddd
+#navigation
+  %nav
+    %ul
+      %li
+        %a{:href => "/search", :class => "selected"} 搜尋
+      - @available_dates.each do |d|
+        %li
+          %a{:href => "/report/#{d}"}= d
