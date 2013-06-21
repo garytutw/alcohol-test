@@ -6,14 +6,15 @@
   });
 #wrapper
   #report
-    - if @current_user.permission_level == 1
+    - if @current_user.permission_level != -1
       .breadcrumbs
         %a{:href => "/site/#{@current_user.site_id}"} 每日統計報表
         >
     %div
       %h1{:style => "position: relative;"}
         %span 人員列表
-        %input{:id => "signup", :type => "button", :style => "position: absolute; right: 0px;", :value => "新增帳號"}  
+        - if @current_user.permission_level < 2
+          %input{:id => "signup", :type => "button", :style => "position: absolute; right: 0px;", :value => "新增帳號"}  
     %table{:width => "100%"}
       %tr{:valign => "top"}
         %th{:width => "88"}

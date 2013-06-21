@@ -73,7 +73,8 @@
       .field
         .collection
           %input{:name => "update", :value => "修改帳號", :type => "submit"}
-          %input{:name => "delete", :value => "移除帳號", :type => "submit"}
+          - if @current_user.permission_level < 2
+            %input{:name => "delete", :value => "移除帳號", :type => "submit"}
           %input{:name => "cancel", :value => "取消", :type => "submit"}
 #navigation
   %nav

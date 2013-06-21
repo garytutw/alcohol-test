@@ -11,20 +11,22 @@ class Application
     haml :manager
   end
   
-  get "/manager/edit", :auth => [:admin, :auditor] do
+  get "/manager/edit", :auth => [:admin, :auditor, :operator] do
     if @current_user.permission_level == -1 # admin
-      @users = repository(:default).adapter.select(
-      "select * from users where permission_level < 2 order by site_id ")
+      @users = User.all(:permission_level.lt => 2, :enabled => true, :order => [ User.site.id.asc ] )
       haml :user_list  
+    elsif @current_user.permission_level == 1 # site admin
+      @users = User.all(:permission_level.gte => 1, User.site.id => @current_user.site_id, :enabled => true, :order => [ :permission_level.asc ])
+      haml :user_list
     else
       @users = repository(:default).adapter.select(
-      "select * from users where permission_level = 2 and site_id = #{@current_user.site_id}")
-      haml :user_list    
+      "select * from users where id = '#{@current_user.id}'")
+      haml :user_list      
     end
   	
   end
   
-  get "/manager/edit/:id", :auth => [:admin, :auditor] do
+  get "/manager/edit/:id", :auth => [:admin, :auditor, :operator] do
      @user = User.first(:id => params[:id])
       # p @user
       if @user.nil?
@@ -37,7 +39,7 @@ class Application
       end
   end
   
-  post "/manager/edit", :auth => [:admin, :auditor] do
+  post "/manager/edit", :auth => [:admin, :auditor, :operator] do
   	user = User.first(:id => params[:user][:id])
   	if user.nil? # incase booked url to delete user account twice!
   	  redirect "/manager/edit"
@@ -62,7 +64,8 @@ class Application
         redirect "/manager/edit/#{user.id}"
       end
   	elsif params.has_key? "delete"
-  	  if user.destroy
+  	  # if user.destroy
+  	  if user.update(:enabled => false)
   	  	flash[:notice] = "使用者 #{user.name} 刪除成功！" 
       	redirect "/manager/edit" 
   	  else 
@@ -129,7 +132,7 @@ class Application
   end
 
   post "/login" do
-    if user = User.first(:id => params[:id])
+    if user = User.first(:id => params[:id], :enabled => true)
       if user.password_hash == BCrypt::Engine.hash_secret(params[:password], user.password_salt)
         session[:user] = user.token 
         response.set_cookie "user", {:value => user.token, :expires => (Time.now + 24*60*60)} if params[:remember_me]
