@@ -1,0 +1,25 @@
+!= paginate @result, items_per_page: 20, labels: {first: '«', last: '»'}, renderer: 'haml'
+%table{:width => "100%"}
+  %tr{:valign => "top"}
+    %th{:width => "126"}
+      %span 時間
+    %th{:width => "126"}
+      %span 員工編號
+    %th{:width => "126"}
+      %span 員工姓名
+    %th{:width => "126"}
+      %span 酒測值
+  - @tests.each do |t|
+    %tr{:valiagn => "top", :image => t.image}
+      %td
+        %span #{format_time(t.time)}
+      %td
+        %span.driver_id #{t.driver.serial}
+      %td
+        %span.driver_name #{t.driver.name}
+      %td
+        %span #{t.value}
+%div.photo
+  %div.driver_id
+  %div.photo_div
+  

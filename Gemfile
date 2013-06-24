@@ -9,6 +9,7 @@ gem 'bcrypt-ruby',  '>=3.0.1'
 gem 'json',  '>=1.7.5'
 gem 'rufus-scheduler', '>= 2.0.17'
 gem 'mail',  '>=2.4.4'
+gem 'sinatra-paginate', '>=0.1.0'
 gem 'whenever'
 
 group :development do

@@ -1,7 +1,48 @@
+:css
+  tr.overrow {
+    background-color: #FFFF99;
+  }
+  tr.selected {
+    background-color: #FFFF00;
+  }
+  a.selected {
+    background-color: #FFFF00;
+  }
+  .input {
+    text-align: left;
+  }
 :javascript
+  function get_page(url, sel) {
+    $.get(url, function(data) {
+      $(sel).empty().append(data);
+      m = /(\?|\&)page=(\d+)/.exec(url);
+      if (m) {
+        $(sel + ' .sinatra-pagination a').filter(function() {
+          return $(this).text() == m[2];
+        }).addClass('selected');
+      }
+      $(sel + ' tr').not(':first').hover(function() {
+        $(this).toggleClass('overrow');
+      }, function() {
+        $(this).toggleClass('overrow');
+      }).css('cursor', 'pointer').click(function() {
+        $(this).parent().children().removeClass('selected');
+        $(this).addClass('selected');
+        $(sel + ' div.driver_id').text($(this).find('td span.driver_id').text());
+        var name = $(this).attr('image');
+        $(sel + ' div.photo_div').empty().append(
+          '<img width="300" src="/photos/' + name.substr(0, 2) + '/' + name.substr(2, 2) + '/' + name + '"/>');
+      });
+      $(sel + ' a').click(function(e) {
+        get_page($(this).attr('href'), sel);
+        e.preventDefault();
+      });
+    });
+  }
   $(function() {
     $("#accordion").accordion({
-      collapsible: true
+      collapsible: true,
+      heightStyle: 'content'
     });
     $.datepicker.setDefaults(
       $.extend(
@@ -9,12 +50,18 @@
         {'dateFormat': 'yy-mm-dd'}
       )
     );
-    $("#site_datepicker input").datepicker({
+    $("#site_datepicker input:first").datepicker({
       showOn: "button",
       buttonImage: "/images/calendar.gif",
       buttonImageOnly: true,
       maxDate: "#{@max_date}",
       minDate: "#{@min_date}",
+    });
+
+    $('#site_search_submit').click(function() {
+      var s = $('#site_select select').val();
+      var d = $('#site_datepicker input:first').val();
+      get_page('/search/bysite?site_id=' + s + '&date=' + d + '&page=1', '#site_search_result');
     });
   });
 #wrapper
@@ -25,19 +72,19 @@
     #accordion
       %h3 分站搜尋
       #site_search
-        #site_select
+        #site_select.input
           %span 分站:
           %select{:name => 'siteid'}
             - @sites.each do |s|
               %option{:value => "#{s.id}"} #{s.name}
-        #site_datepicker
+        #site_datepicker.input
           %span 日期:
           %input{:type  => 'button', :diabled => 'disabled', :value => @max_date}
-        %div
-          %input{:type => 'button', :value => '搜尋'}
+          %input{:id => 'site_search_submit', :type => 'button', :value => '搜尋'}
+        #site_search_result
       %h3 員工搜尋
       #emp_search
-        ddd
+       
 #navigation
   %nav
     %ul
