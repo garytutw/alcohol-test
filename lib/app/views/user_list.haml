@@ -6,14 +6,18 @@
   });
 #wrapper
   #report
-    - if @current_user.permission_level != -1
+    - if @current_user.permission_level > 0
       .breadcrumbs
-        %a{:href => "/site/#{@current_user.site_id}"} 每日統計報表
+        %a{:href => "/site/#{@current_user.site_id}"} 每日統計報表    
         >
+    - if @current_user.permission_level == 0
+      .breadcrumbs
+        %a{:href => "/report"} 日報表
+        >    
     %div
       %h1{:style => "position: relative;"}
         %span 人員列表
-        - if @current_user.permission_level < 2
+        - if @current_user.permission_level == -1 || @current_user.permission_level == 1
           %input{:id => "signup", :type => "button", :style => "position: absolute; right: 0px;", :value => "新增帳號"}  
     %table{:width => "100%"}
       %tr{:valign => "top"}

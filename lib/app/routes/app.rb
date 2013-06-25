@@ -11,7 +11,7 @@ class Application
     haml :manager
   end
   
-  get "/manager/edit", :auth => [:admin, :auditor, :operator] do
+  get "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
     if @current_user.permission_level == -1 # admin
       @users = User.all(:permission_level.lt => 2, :enabled => true, :order => [ User.site.id.asc ] )
       haml :user_list  
@@ -26,7 +26,7 @@ class Application
   	
   end
   
-  get "/manager/edit/:id", :auth => [:admin, :auditor, :operator] do
+  get "/manager/edit/:id", :auth => [:admin, :hq, :auditor, :operator] do
      @user = User.first(:id => params[:id])
       # p @user
       if @user.nil?
@@ -39,7 +39,7 @@ class Application
       end
   end
   
-  post "/manager/edit", :auth => [:admin, :auditor, :operator] do
+  post "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
   	user = User.first(:id => params[:user][:id])
   	if user.nil? # incase booked url to delete user account twice!
   	  redirect "/manager/edit"

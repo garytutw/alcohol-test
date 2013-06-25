@@ -148,3 +148,5 @@
       - @available_dates.each do |d|
         %li
           %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d
+      %li
+        %a{:href => "/manager/edit"} 新增修改帳號

@@ -48,7 +48,7 @@ class Application
                              :offset => page * limit,
                              :limit => limit,
                              :order => [:time.asc])
-    totals  = AlcoholTest.count(:driver_id => '#{params[:emp_id]}',
+    totals  = AlcoholTest.count(:driver_id => driver.id, 
                                :time => dt_lower..dt_upper)
     @result = Struct::Result.new(totals, @tests.count, @tests)
     show :search_results, :layout => false 
