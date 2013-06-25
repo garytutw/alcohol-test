@@ -11,6 +11,11 @@
   .input {
     text-align: left;
   }
+  .ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
+  ul[id^='ui-id'] {display: none; top: 31px; left: 69px; width: 200px; list-style-type: none;}
+
 :javascript
   function get_page(url, sel) {
     $.get(url, function(data) {
@@ -63,6 +68,53 @@
       var d = $('#site_datepicker input:first').val();
       get_page('/search/bysite?site_id=' + s + '&date=' + d + '&page=1', '#site_search_result');
     });
+    // Code for seach by employee ~
+    $('#employee_search_submit').click(function() {
+      var s = $('#empid').val();
+      var d1 = $('#emp_datepicker input#from_date').val();
+      var d2 = $('#emp_datepicker input#to_date').val();
+      get_page('/search/byserial?emp_id=' + s + '&date1=' + d1 + '&date2=' + d2 + '&page=1', '#emp_search_result');
+    });
+    $("#emp_datepicker input#from_date").datepicker({
+      showOn: "button",
+      buttonImage: "/images/calendar.gif",
+      buttonImageOnly: true,
+      maxDate: "#{@max_date}",
+      minDate: "#{@min_date}",
+    });
+    $("#emp_datepicker input#to_date").datepicker({
+      showOn: "button",
+      buttonImage: "/images/calendar.gif",
+      buttonImageOnly: true,
+      maxDate: "#{@max_date}",
+      minDate: "#{@min_date}",
+    }); 
+    $('#empid').autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/search/serial_inquiry",
+          dataType: "json",
+          data: {
+            style: "full",
+            maxRows: 12,
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            // alert(data.drivers);
+            response( $.map( data.drivers, function( item ) {
+              return {
+                label: item.id + " - " + item.name,
+                value: item.id
+              }
+            }));
+          }
+        });
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        $('#empid').val( ui.item.value );
+      }
+    });
   });
 #wrapper
   #report
@@ -84,7 +136,17 @@
         #site_search_result
       %h3 員工搜尋
       #emp_search
-       
+        #employee_picker.input
+          .ui-widget
+            %label{:for => 'employeeid'} 員工序號:
+            %input{:id => 'empid', :style => 'width: 7em;', :value => ''}
+        #emp_datepicker.input
+          %span 從日期:
+          %input{:id => 'from_date', :type  => 'button', :diabled => 'disabled', :value => @max_date}
+          %span 至日期:
+          %input{:id => 'to_date', :type  => 'button', :diabled => 'disabled', :value => @max_date}
+          %input{:id => 'employee_search_submit', :type => 'button', :value => '搜尋'}  
+        #emp_search_result
 #navigation
   %nav
     %ul
