@@ -43,7 +43,23 @@
           }).css('cursor', 'pointer').click(function() {
             $(this).parent().children().removeClass('selected');
             $(this).addClass('selected');
-            $('#driver_id').text($(this).find('td span.driver_id').text());
+            $('#anomaly_photo input').show().click(function(e) {
+            console.log(e);
+              var thePopup = window.open('', 'print', "menubar=0,height=640,width=640,left=" + (e.pageX - 200) + ",top=" + (e.pageY-40));
+              $('#anomalys:first').clone().appendTo(thePopup.document.body);
+              var src = $('#anomaly_photo_div img', thePopup.document).attr('src');
+              $('#anomaly_photo_div img', thePopup.document)
+                .attr('src', window.location.origin + '/' + src)
+                .attr('width', 600);
+              $('#anomalys table tr', thePopup.document).not(':first').filter(function(){
+                return $(this).attr('class') != 'selected';
+              }).hide();
+              $('table,td,th', thePopup.document).css('border', '1px solid black').css('border-spacing', '0').css('text-align', 'center');
+              $('#anomaly_photo input', thePopup.document).hide();
+              $('span.ui-dialog-title').clone().insertBefore($('#anomalys table', thePopup.document)).wrap('<b/>');
+              $('#anomalys table', thePopup.document).before('<p/>').after('<p/>');
+              thePopup.print();
+            });
             var name = $(this).attr('image');
             $('#anomaly_photo_div').empty().append(
               '<img width="300" src="/photos/' + name.substr(0, 2) + '/' + name.substr(2, 2) + '/' + name + '"/>');
