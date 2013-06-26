@@ -35,4 +35,8 @@ module Helpers
   def format_time(time)
     time.strftime('%H:%M:%S')
   end
+  
+  def format_datetime(time)
+    time.strftime('%Y-%m-%d %H:%M:%S')
+  end
 end

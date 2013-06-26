@@ -12,7 +12,7 @@
   - @tests.each do |t|
     %tr{:valiagn => "top", :image => t.image}
       %td
-        %span #{format_time(t.time)}
+        %span #{format_datetime(t.time)}
       %td
         %span.driver_id #{t.driver.serial}
       %td
