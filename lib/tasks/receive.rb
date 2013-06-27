@@ -1,25 +1,26 @@
 # encoding: utf-8
 require_relative '../app/models/init'
 require 'mail'
-require 'RMagick'
+
 
 MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
 IMG_DIR = 'photos'
 
-config = YAML.load_file('config/mail.yaml')
-abncfg = YAML.load_file('config/app.yaml')
-
-desc 'Receiving alcohol tests from POP3 server'
-task :receive do
-  def get_recipients site_id
+@config = YAML.load_file('config/mail.yaml')
+@abncfg = YAML.load_file('config/app.yaml')
+def create_directory_if_not_exists(directory_name)
+    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    return directory_name
+end
+def get_recipients site_id
     cclist = ''
     SiteNotifier.all(:site_id => site_id).each do |notify|
       cclist += notify.email + ","
     end
     cclist.chomp(",")  
-  end
+end
   
-  def check_anomaly(record, limit, rule)
+def check_anomaly(record, limit, rule)
     puts "[Debug] Checking anomaly rules: record[:value] > limit => #{record[:value] > limit} && !!(record[:driver].serial.to_s =~ rule) => #{!!(record[:driver].serial.to_s =~ rule)}"
     begin
       if record[:value] > limit && !!(record[:driver].serial.to_s =~ rule)
@@ -42,26 +43,9 @@ task :receive do
       # do nothing ~
       print "Error sending anomaly email at " + Time.now.to_s + "::: " + e.message + "\n"
     end  
-  end
-  
-  def create_directory_if_not_exists(directory_name)
-    Dir.mkdir(directory_name) unless File.exists?(directory_name)
-    return directory_name
-  end
-
-  Mail.defaults do
-    retriever_method :pop3,
-      :address    => config["address"],
-      :port       => config["port"],
-      :user_name  => config["user_name"],
-      :password   => config["password"],
-      :enable_ssl => config["enable_ssl"]
-  end
-  
-  puts "Mail server connected, start to check new mails ..."
-  Mail.find_and_delete(:count => 'ALL', :what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |mail|
-    mail.mark_for_delete = false
-    begin
+end  
+def mail_handler mail
+  begin
       body = mail.text_part.decoded    
       record = Hash.new
       tester = Hash.new
@@ -126,9 +110,9 @@ task :receive do
       at = AlcoholTest.new(record)
       if at.save
         # check anomaly of this received mail
-        check_anomaly(record, Float(abncfg["anomaly_bound"]), Regexp.new(abncfg["tester_serial"]))   
+        check_anomaly(record, Float(@abncfg["anomaly_bound"]), Regexp.new(@abncfg["tester_serial"]))   
   
-        if config['delete_from_server']
+        if @config['delete_from_server']
           mail.mark_for_delete = true    # delete the mail from server
         end
       else
@@ -137,8 +121,35 @@ task :receive do
     rescue Exception => e
       # [Todo] save maleformat email to file for further processing ~
       print "Error receiving email at " + Time.now.to_s + "::: " + e.message + "\n"
-      next   
-    end 
+      #next   
+    end
+end
+
+desc 'Import alcohol tests from local file server'
+task :import, :file do |t, args|
+  mail_file = args[:file] || ''
+  puts "Block called !" + mail_file
+  amail = Mail.read(mail_file)
+  mail_handler amail
+end
+
+desc 'Receiving alcohol tests from POP3 server'
+task :receive do
+  
+  config = YAML.load_file('config/mail.yaml')
+  Mail.defaults do
+    retriever_method :pop3,
+      :address    => config["address"],
+      :port       => config["port"],
+      :user_name  => config["user_name"],
+      :password   => config["password"],
+      :enable_ssl => config["enable_ssl"]
+  end
+  
+  puts "Mail server connected, start to check new mails ..."
+  Mail.find_and_delete(:count => 'ALL', :what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |themail|
+    themail.mark_for_delete = false
+    mail_handler themail 
   } #end
   puts 'Done! No more mail found!'
 end
