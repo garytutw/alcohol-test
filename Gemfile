@@ -11,6 +11,8 @@ gem 'rufus-scheduler', '>= 2.0.17'
 gem 'mail',  '>=2.4.4'
 gem 'sinatra-paginate', '>=0.1.0'
 gem 'whenever'
+gem 'rmagick',      '>=2.13.2'
+
 
 group :development do
   gem 'dm-sqlite-adapter',  '>= 1.2.0'
