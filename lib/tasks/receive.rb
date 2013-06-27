@@ -1,6 +1,7 @@
 # encoding: utf-8
 require_relative '../app/models/init'
 require 'mail'
+require 'RMagick'
 
 MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
 IMG_DIR = 'photos'
@@ -100,7 +101,19 @@ task :receive do
             create_directory_if_not_exists(File.join(IMG_DIR,''))
             pathName = create_directory_if_not_exists(File.join(IMG_DIR, filename[0..1]))
             pathName = create_directory_if_not_exists(File.join(pathName, filename[2..3]))
-            File.open(pathName + File::SEPARATOR + filename, "w+b", 0644) {|f| f.write attachment.body.decoded}
+            img = Magick::Image.from_blob(attachment.body.decoded).first
+            bg = Magick::Image.new(190, 50) {self.background_color = '#a0a0a0'}
+            txt = Magick::Draw.new
+            bg.annotate(txt, 0, 0, 0, 0, "酒測值: #{record[:value].to_f}") {
+              txt.font = 'lib/app/fonts/DroidSansFallback.ttf'
+              txt.gravity = Magick::CenterGravity
+              txt.pointsize = 30 
+              txt.stroke = 'transparent'
+              txt.fill = '#ff0000'
+              txt.font_weight = Magick::BoldWeight
+            }
+            img = img.dissolve(bg, 1, 1, Magick::SouthEastGravity)
+            File.open(pathName + File::SEPARATOR + filename, "w+b", 0644) {|f| f.write img.to_blob}
           rescue Exception => e
             raise "Unable to save data for imgage: #{filename} because #{e.message}"
           end
