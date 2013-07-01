@@ -25,7 +25,7 @@
         %td
           %span.driver_name #{t.driver.name}
         %td
-          %span #{t.value}
+          %span #{"%.3f" % t.value}
   #anomaly_photo
     %input{:type => 'button', :value => '列印', :style => 'display:none;text-align:right;'}
     #anomaly_photo_div 

@@ -2,7 +2,6 @@
 require_relative '../app/models/init'
 require 'mail'
 
-
 MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
 IMG_DIR = 'photos'
 
@@ -60,7 +59,10 @@ def mail_handler mail
         when '員工姓名'
           tester[:name] = r[1]
         when '檢測結果'
-          record[:value] = BigDecimal(r[1])
+          puts r[1]
+          #record[:value] = BigDecimal(r[1]).truncate(3)
+          record[:value] = BigDecimal.new(r[1], 4)
+          puts record[:value]
         when '日期', '時間'
           if r[0] == '日期' then tmp[0] = r[1]
           else tmp[1] = r[1] + ':' + r[2] + ':' + r[3]
@@ -88,7 +90,7 @@ def mail_handler mail
             img = Magick::Image.from_blob(attachment.body.decoded).first
             bg = Magick::Image.new(190, 50) {self.background_color = '#a0a0a0'}
             txt = Magick::Draw.new
-            bg.annotate(txt, 0, 0, 0, 0, "酒測值: #{record[:value].to_f}") {
+            bg.annotate(txt, 0, 0, 0, 0, "酒測值: #{"%.3f" % record[:value].to_f}") {
               txt.font = 'lib/app/fonts/DroidSansFallback.ttf'
               txt.gravity = Magick::CenterGravity
               txt.pointsize = 30 
