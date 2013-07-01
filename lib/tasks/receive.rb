@@ -59,10 +59,7 @@ def mail_handler mail
         when '員工姓名'
           tester[:name] = r[1]
         when '檢測結果'
-          puts r[1]
-          #record[:value] = BigDecimal(r[1]).truncate(3)
-          record[:value] = BigDecimal.new(r[1], 4)
-          puts record[:value]
+          record[:value] = BigDecimal(r[1])
         when '日期', '時間'
           if r[0] == '日期' then tmp[0] = r[1]
           else tmp[1] = r[1] + ':' + r[2] + ':' + r[3]
