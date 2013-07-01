@@ -12,6 +12,7 @@ gem 'mail',  '>=2.4.4'
 gem 'sinatra-paginate', '>=0.1.0'
 gem 'whenever'
 gem 'rmagick',      '>=2.13.2'
+gem 'rake'
 
 
 group :development do
