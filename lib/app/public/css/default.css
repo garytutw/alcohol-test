@@ -388,9 +388,9 @@ header h1 span {
 nav ul {
 	clear: left;
 	list-style: none;
-  font-weight: bolder;
+    font-weight: bolder;
 	margin-left: 0;
-  margin-bottom: 50px;
+    margin-bottom: 50px;
 	text-align: left;
 	border: none;
 }
@@ -429,6 +429,11 @@ nav ul li a.selected {
 
 nav ul li a.selected:hover {
 	color: #C17260;   
+}
+
+nav label {
+	color: #a6351c;
+	font-size: 1.2em;
 }
 
 #mainRight, #mainRight2 {
@@ -521,6 +526,7 @@ footer ul li a:hover {
 #navigation		{ border-right: 1px solid #ccc; padding-left: 18px; }
 /* Content Positioning and Size */
 #navigation		{ float: left; width: 20%; }
+#navisep	{ border-bottom: 2px solid #ccc; }
 #content		{ margin-left: 44.3%; }
 #report     { margin-left: 24%; }
 

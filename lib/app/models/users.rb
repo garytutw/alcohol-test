@@ -11,7 +11,7 @@ class User
   property :created_at, DateTime
   property :token, String
   property :permission_level, Integer, :default => 2
-  belongs_to :site, :required => false
+  #belongs_to :site, :required => false
   property :enabled, Boolean, :default => true
   
   validates_presence_of         :password, :unless => Proc.new { |t| t.password_hash }
@@ -19,6 +19,8 @@ class User
   validates_confirmation_of     :password
   validates_length_of           :password, :min => 4, :if => Proc.new { |t| t.token.nil? || !t.password.nil?}
   validates_uniqueness_of :id
+	
+	has n, :sites, :through => Resource, :order => [ :seq.asc ]
 	
   def password=(pass)
     @password = pass

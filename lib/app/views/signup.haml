@@ -40,14 +40,14 @@
     .field
       %label.label{:for => "user_site"} 所屬分站
       .ui
-        %select{:id => "siteSelect", :name => "user[site]"}
+        %select{:id => "siteSelect", :name => "sites[]"}
           - if @current_user.permission_level == -1
             %option{:value => 0, :selected => true} - 總公司 -
             - @sites.each do |site|  
               %option{:value => site.id} #{site.name}
           - else
             - @sites.each do |site|
-              - if site.id == @current_user.site_id
+              - if @current_user.sites.map{|s|s.id}.include?(site.id)
                 %option{:value => site.id} #{site.name}  
         
     .field

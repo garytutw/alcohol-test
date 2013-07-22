@@ -13,14 +13,15 @@ class Application
   
   get "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
     if @current_user.permission_level == -1 # admin
-      @users = User.all(:permission_level.lt => 2, :enabled => true, :order => [ User.site.id.asc ] )
+      @users = User.all(:permission_level.lt => 2, :enabled => true )
       haml :user_list  
     elsif @current_user.permission_level == 1 # site admin
-      @users = User.all(:permission_level.gte => 1, User.site.id => @current_user.site_id, :enabled => true, :order => [ :permission_level.asc ])
+      @users = Site.all(:id => @current_user.sites.map{|s| s.id}).users(:permission_level.gte => 1, :enabled => true, :order => [ :permission_level.asc ])
+      #@users = User.all(:permission_level.gte => 1, :sites => Array(@current_user.sites), :enabled => true, :order => [ :permission_level.asc ])
+      # Above is not working due to after migrate site_id column if User can't be removed, and :sites will try to associate this old column
       haml :user_list
     else
-      @users = repository(:default).adapter.select(
-      "select * from users where id = '#{@current_user.id}'")
+      @users = User.all(:id => @current_user.id)
       haml :user_list      
     end
   	
@@ -34,7 +35,7 @@ class Application
         redirect "/manager/edit"
       else
         param = nil
-        @sites ||= Site.all if @site.nil?
+        @sites ||= Site.all(:id.gte => 1, :order => [ :seq.asc ]) if @site.nil?
         haml :user
       end
   end
@@ -45,13 +46,16 @@ class Application
   	  redirect "/manager/edit"
   	end
   	if params.has_key? "update"
-  		params[:user]["site"] = Site.first(:id => params[:user][:site])
+  		#params[:user]["site"] = Site.first(:id => params[:user][:site])
       # user_attributes = params[:user]
       # if params[:user][:password] == "" # not set in web page, keep the original passwd
         # user_attributes.delete("password")
         # user_attributes.delete("password_confirmation")
       # end
       if user.update(params[:user])
+        user.site_users.all.destroy!
+        params[:sites].map{|s| user.sites << Site.get(s)}
+        user.save
         flash[:notice] = "使用者 #{user.name} 更新完成！"
         redirect '/manager/edit'
       else # replace original dm-validation errors with Chinese ones
@@ -78,7 +82,7 @@ class Application
   end
   
   get "/manager/signup", :auth => [:admin, :auditor] do
-  	@sites ||= Site.all if @site.nil?
+  	@sites ||= Site.all(:id.gte => 1) if @site.nil?
   	if params.empty?
     	haml :signup
     else # redirect from signup POST
@@ -90,9 +94,11 @@ class Application
     if params.has_key? "cancel"
       redirect "/manager/edit"
     end
-  	params[:user]["site"] = Site.first(:id => params[:user][:site])
+  	#params[:user]["site"] = Site.first(:id => params[:user][:site])
     user = User.create(params[:user])
     if user.save
+      params[:sites].map{|s| user.sites << Site.get(s)}
+      user.save
       flash[:notice] = "員工帳號 #{user.name} 新增完成！" 
       #session[:user] = user.token # no need to switch to the newly created user
       redirect "/manager/edit" 
@@ -159,13 +165,13 @@ class Application
   end
   
   get "/manager/sitemgr", :auth => :admin do
-    @sites = Site.all(:order => [ :seq.asc ])
+    @sites = Site.all(:id.gte => 1, :order => [ :seq.asc ])
     haml :site_mgr
   end
   
   post "/manager/sitemgr/:site_id/:checked", :auth => :admin do
     deact_site = Site.get(params[:site_id])
-    @sites = Site.all
+    @sites = Site.all(:id.gte => 1)
     if params[:checked] == 'true'
       deact_site.active = false
       org_seq = deact_site.seq
@@ -202,7 +208,7 @@ class Application
   end
   
   post "/manager/site/sort", :auth => :admin do
-  	@sites ||= Site.all if @site.nil?
+  	@sites ||= Site.all(:id.gte => 1) if @site.nil?
     @sites.each do |site|
       site.seq = params['site'].index(site.id.to_s) + 1
       if !site.save
@@ -212,7 +218,7 @@ class Application
   end
   
   post "/manager/sitenew", :auth => :admin do
-    @sites ||= Site.all if @site.nil?
+    @sites ||= @sites = Site.all(:id.gte => 0) if @site.nil?
     if params.length > 0 # new site
       site = Site.create(:name => params[:site], :seq => @sites.length + 1)
       if site.save

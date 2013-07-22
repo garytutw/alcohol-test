@@ -50,8 +50,12 @@
       collapsible: true,
       active: false,
     });
+    // For multiple site selection
+    $('#siteSelect').on('change', function() {
+      window.location = "/site/" + this.value;
+    });
   });
-
+ 
 #wrapper
   #report
     - if !@has_bc.nil? and @has_bc
@@ -130,6 +134,12 @@
 #navigation
   %nav
     %ul
+      - if @current_user.sites.length > 1
+        %label{:for => "sites"} 選擇分站：
+        %select{:id => "siteSelect", :name => "siteSelect"}
+          - @current_user.sites.each do |site|  
+            %option{:value => site.id, :selected => site.id==@site_report.site_id} #{site.name}
+        %p{:id => "navisep"}  
       - @available_dates.each do |d|
         %li
           %a{:href => "/site/#{@site_report.site_id}/#{d}", :class => d == @date.to_s && "selected"}= d            

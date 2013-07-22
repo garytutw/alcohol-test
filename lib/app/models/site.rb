@@ -10,6 +10,7 @@ class Site
   has n, :alcohol_tests
   has n, :site_reports
   has n, :site_notifiers
+  has n, :users, :through => Resource
 
   def update_report(date= Date.today - 1)
     dt_upper = ((date + 1).to_time - 1).to_datetime

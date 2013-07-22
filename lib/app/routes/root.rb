@@ -9,8 +9,7 @@ class Application
     elsif current_user.in_role? :hq
       redirect "/report"
     else
-      puts #{current_user.site}
-      redirect "/site/#{current_user.site_id}"
+      redirect "/site/#{current_user.site_users.first.site_id}"
     end
   end
 end

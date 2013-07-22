@@ -8,7 +8,7 @@
   #report
     - if @current_user.permission_level > 0
       .breadcrumbs
-        %a{:href => "/site/#{@current_user.site_id}"} 每日統計報表    
+        %a{:href => "/site/#{@current_user.site_users.first.site_id}"} 每日統計報表    
         >
     - if @current_user.permission_level == 0
       .breadcrumbs
@@ -38,7 +38,7 @@
           %td
             %span #{usr.name}
           %td
-            %span= Site.first(:id => usr.site_id).nil? ? '' : Site.first(:id => usr.site_id).name
+            %span= usr.site_users.size==0? '總公司' : usr.sites.map{|t|t.name}.join(",")
           %td
             %span
               - case usr.permission_level

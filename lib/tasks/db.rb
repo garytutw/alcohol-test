@@ -55,5 +55,14 @@ namespace :db do
       insert_csv("test/data#{i}.csv", -24*60*60*(i-1))
     end
   end
+  
+  desc 'Migrate to Many-to-Many Relation of User & Site'
+  task :usertosites do
+    #repository(:default).adapter.execute("insert into sites (id, name, seq) values (0, '總公司', 0)")
+    users = repository(:default).adapter.select('SELECT id, site_id FROM users where site_id > 0')
+    users.each do |user|
+      repository(:default).adapter.execute("insert into site_users (user_id, site_id) values ('#{user.id}', #{user.site_id})")
+    end
+  end              
 end
 

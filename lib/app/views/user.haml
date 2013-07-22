@@ -51,12 +51,12 @@
       .field
         %label.label{:for => "user_site"} 所屬分站
         .ui
-          %select{:id => "siteSelect", :name => "user[site]"}
+          %select{:id => "siteSelect", :name => "sites[]", :multiple => @user.permission_level==1?true:false}
             - if @current_user.permission_level == -1
               %option{:value => 0, :selected => @user.site_id.nil? ?true:false} - 總公司 -     
             - @sites.each do |site|
-              - if @user.site != nil  
-                %option{:value => site.id, :selected => @user.site.id-site.id==0} #{site.name}
+              - if @user.sites != nil  
+                %option{:value => site.id, :selected => @user.sites.map{|s|s.id}.include?(site.id)} #{site.name}
           
       .field
         %label.label{:for => "user_permission_level"} 系統權限
