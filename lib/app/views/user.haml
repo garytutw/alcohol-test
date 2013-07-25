@@ -52,8 +52,8 @@
         %label.label{:for => "user_site"} 所屬分站
         .ui
           %select{:id => "siteSelect", :name => "sites[]", :multiple => @user.permission_level==1?true:false}
-            - if @current_user.permission_level == -1
-              %option{:value => 0, :selected => @user.site_id.nil? ?true:false} - 總公司 -     
+            - if @user.permission_level <= 0
+              %option{:value => 0, :selected => true} - 總公司 -     
             - @sites.each do |site|
               - if @user.sites != nil  
                 %option{:value => site.id, :selected => @user.sites.map{|s|s.id}.include?(site.id)} #{site.name}
@@ -62,8 +62,9 @@
         %label.label{:for => "user_permission_level"} 系統權限
         .ui
           %select{:id => "permitSelect", :name => "user[permission_level]"}
-            - if @current_user.permission_level == -1
+            - if @user.permission_level == -1
               %option{:value => -1, :selected => @user.permission_level==-1?true:false} 系統管理者
+            - if @user.permission_level <= 0  
               %option{:value => 0, :selected => @user.permission_level==0?true:false} 總站主管
             - if @user.permission_level == 1   
               %option{:value => 1, :selected => @user.permission_level==1?true:false} 分站主管

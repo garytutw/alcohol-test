@@ -58,10 +58,18 @@ namespace :db do
   
   desc 'Migrate to Many-to-Many Relation of User & Site'
   task :usertosites do
-    #repository(:default).adapter.execute("insert into sites (id, name, seq) values (0, '總公司', 0)")
-    users = repository(:default).adapter.select('SELECT id, site_id FROM users where site_id > 0')
+    repository(:default).adapter.execute("insert into sites (id, name, seq) values (0, '總公司', 0)")
+    users = repository(:default).adapter.select('SELECT id, site_id FROM users')
     users.each do |user|
-      repository(:default).adapter.execute("insert into site_users (user_id, site_id) values ('#{user.id}', #{user.site_id})")
+      begin
+        if user.site_id.nil?
+          repository(:default).adapter.execute("insert into site_users (user_id, site_id) values ('#{user.id}', 0)")
+        elsif 
+          repository(:default).adapter.execute("insert into site_users (user_id, site_id) values ('#{user.id}', #{user.site_id})")
+        end
+      rescue DataObjects::Error
+        user.rollback
+      end      
     end
   end              
 end
