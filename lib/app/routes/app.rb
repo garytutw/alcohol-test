@@ -13,10 +13,10 @@ class Application
   
   get "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
     if @current_user.permission_level == -1 # admin
-      @users = User.all(:permission_level.lt => 2, :enabled => true )
+      @users = User.all(:permission_level.lt => 2)
       haml :user_list  
     elsif @current_user.permission_level == 1 # site admin
-      @users = Site.all(:id => @current_user.sites.map{|s| s.id}).users(:permission_level.gte => 1, :enabled => true, :order => [ :permission_level.asc ])
+      @users = Site.all(:id => @current_user.sites.map{|s| s.id}).users(:permission_level.gte => 1, :order => [ :permission_level.asc ])
       #@users = User.all(:permission_level.gte => 1, :sites => Array(@current_user.sites), :enabled => true, :order => [ :permission_level.asc ])
       # Above is not working due to after migrate site_id column if User can't be removed, and :sites will try to associate this old column
       haml :user_list
@@ -29,7 +29,6 @@ class Application
   
   get "/manager/edit/:id", :auth => [:admin, :hq, :auditor, :operator] do
      @user = User.first(:id => params[:id])
-      # p @user
       if @user.nil?
         flash[:error] = "此員工帳號不存在"
         redirect "/manager/edit"
@@ -46,6 +45,7 @@ class Application
   	  redirect "/manager/edit"
   	end
   	if params.has_key? "update"
+  	  params[:user]["enabled"] = true
   		#params[:user]["site"] = Site.first(:id => params[:user][:site])
       # user_attributes = params[:user]
       # if params[:user][:password] == "" # not set in web page, keep the original passwd

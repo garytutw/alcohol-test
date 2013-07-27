@@ -32,7 +32,7 @@
         %th{:width => "88"}
           %span 編輯帳號
       - @users.each do |usr|
-        %tr{:valign => "top"}
+        %tr{:valign => "top", usr.enabled?? "" : :class => "disabled"}
           %td
             %span #{usr.id}
           %td
@@ -52,7 +52,7 @@
                 登錄人員
           %td
             %span  
-              %a{:href => "/manager/edit/#{usr.id}"} 修改
+              %a{:href => "/manager/edit/#{usr.id}"}= usr.enabled?? '修改':'恢復'
     
 #navigation
   %nav

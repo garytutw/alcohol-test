@@ -570,6 +570,9 @@ border: 1px solid black;
 th {
 white-space: nowrap;
 }
+table tr.disabled {
+color: #ccc;
+}
 
 .logh {
 text-align: left;
