@@ -39,6 +39,11 @@
     return true;
   }
   $(function() {
+    var editable = #{@editable || 'true'};
+    if (!editable) {
+      $("input.editable").attr('disabled', 'disabled');
+      $("select.selectable").attr('disabled', 'disabled');
+    }
     $("input.editable").keyup(validate);
     $("select.selectable").change(validate);
     if ($("#total_trips").val() == 0) {
