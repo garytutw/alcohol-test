@@ -101,10 +101,10 @@
           %span 主管覆核
         %th{:width => "126", :class => "update_column"}
           %span
-      - @reports.each do |r|
+      - @reports.each_with_index do |r, i|
         %tr{:valign => "top", :class => !r.consistent && "validate_err"}
           %td
-            %span #{r.site.seq}
+            %span #{i+1}
           %td
             %span #{r.site.name}
           %td
