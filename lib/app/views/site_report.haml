@@ -39,7 +39,7 @@
     return true;
   }
   $(function() {
-    var editable = #{@editable || 'true'};
+    var editable = #{defined?(@editable) ? @editable : 'true' };
     if (!editable) {
       $("input.editable").attr('disabled', 'disabled');
       $("select.selectable").attr('disabled', 'disabled');

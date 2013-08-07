@@ -24,7 +24,7 @@ class Application
                    end
     @has_bc = true if current_user.in_role? :hq
     # not editable when status is 0 and user is auditor 
-    @editable = @site_report.status == 0 || !current_user.in_role?(:auditor)
+    @editable = @site_report.status != 0 || !current_user.in_role?(:auditor)
     show :site_report
   end
 
