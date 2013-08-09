@@ -51,6 +51,11 @@ class Application
           @site_report.send("#{k.to_s}=", nv)
         end
       end
+      if @site_report.comment != params["site_report"]["comment"]
+        log[:changes] = [] if !log[:changes]
+        log[:changes] << {:f => 'comment', :ov => @site_report.comment, :nv => params["site_report"]["comment"]}
+        @site_report.comment = params["site_report"]["comment"]
+      end
       if log[:changes] || state_changed
         @site_report.save
         if log[:changes] || log[:message]

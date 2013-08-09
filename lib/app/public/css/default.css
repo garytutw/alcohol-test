@@ -589,3 +589,6 @@ background-color: #B2F5F5;
 #print_footer {
 display: none;
 }
+div.field input {
+width: 11em;
+}

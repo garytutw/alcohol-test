@@ -33,7 +33,11 @@
       Number($("#trainees").val()) + Number($("#pumpings").val()) +
       Number($("#repeats").val());
     if (total_tests != calc_num) {
-      alert("總班次數+調度測試+見習+抽班+重複=" + calc_num + " 不等於 受測總次數(" + total_tests + ")");
+      alert("總班次數+調度測試+見習+抽班+其他" + calc_num + " 不等於 受測總次數(" + total_tests + ")");
+      return false;
+    }
+    if ($("#comment").val().length > 10) {
+      alert("備註欄 字數不能超過10個字");
       return false;
     }
     return true;
@@ -95,7 +99,8 @@
          {:id => "operator_tests", :value => @site_report.operator_tests, :label => "調度測試", :isdropdown => true},
          {:id => "trainees", :value => @site_report.trainees, :label => "見習", :isdropdown => true},
          {:id => "pumpings", :value => @site_report.pumpings, :label => "抽班", :isdropdown => true},
-         {:id => "repeats", :value => @site_report.repeats, :label => "重覆", :isdropdown => true}].each do |f|
+         {:id => "repeats", :value => @site_report.repeats, :label => "其他", :isdropdown => true},
+         {:id => "comment", :value => @site_report.comment, :label => "備註"}].each do |f|
         .field
           %label{:for => f[:id]}= f[:label]
           .ui
@@ -107,7 +112,7 @@
               %input.editable{:id => f[:id], :name => "site_report[#{f[:id]}]", :type => "text",
                 :value => f[:value], :ovalue => f[:value]}
       .field
-        %label{:for => "inputter"} 登錄人姓名
+        %label{:for => "inputter"} 登錄人
         .ui
           %input{:id => "inputter_name", :name => "site_report[inputter_name]", :type => "text",
                  :value => @site_report.inputter_name, :disabled => "disabled"}

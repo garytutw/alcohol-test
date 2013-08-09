@@ -13,6 +13,7 @@ class SiteReport
   property :trainees, Integer, :default => 0, :required => false
   property :pumpings, Integer, :default => 0, :required => false
   property :repeats, Integer, :default => 0, :required => false
+  property :comment, String, :length => 40, :required => false
 #  property :anomaly_tests, Integer
   property :created_at, DateTime
   property :updated_at, DateTime
