@@ -95,12 +95,12 @@
           %span 調度測試
         %th{:width => "100"}
           %span 見習/抽班/其它
-        %th{:width => "180"}
-          %span 備註
         %th{:width => "120"}
           %span 主管姓名
         %th{:width => "120"}
           %span 主管覆核
+        %th{:width => "180"}
+          %span 備註
         %th{:width => "120", :class => "update_column"}
           %span
       - @reports.each_with_index do |r, i|
@@ -126,8 +126,6 @@
           %td
             %span #{r.trainees}/#{r.pumpings}/#{r.repeats}
           %td
-            %span{:style=>"white-space:nowrap"} #{r.comment}
-          %td
             %span= r.auditor.nil? ? '' : r.auditor.name
           %td
             - case r.status
@@ -137,6 +135,8 @@
               %span  未核覆
             - when 2
               %span 正確無誤
+          %td
+            %span{:style=>"white-space:nowrap"} #{r.comment}
           %td.update_column
             %span  
               %a{:href => "/site/#{r.site_id}/#{@date}"} 更新
