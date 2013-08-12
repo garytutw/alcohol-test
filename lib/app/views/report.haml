@@ -81,25 +81,27 @@
       %tr{:valign => "top"}
         %th{:width => "35"}
           %span No.
-        %th{:width => "126"}
+        %th{:width => "120"}
           %span 站名
-        %th{:width => "126"}
+        %th{:width => "120"}
           %span 登錄人
-        %th{:width => "126"}
+        %th{:width => "100"}
           %span 受測總次數
-        %th{:width => "126"}
+        %th{:width => "100"}
           %span 異常次數 
-        %th{:width => "126"}
+        %th{:width => "100"}
           %span 總班次數
-        %th{:width => "126"}
+        %th{:width => "100"}
           %span 調度測試
-        %th{:width => "126"}
+        %th{:width => "100"}
           %span 見習/抽班/其它
-        %th{:width => "126"}
+        %th{:width => "180"}
+          %span 備註
+        %th{:width => "120"}
           %span 主管姓名
-        %th{:width => "126"}
+        %th{:width => "120"}
           %span 主管覆核
-        %th{:width => "126", :class => "update_column"}
+        %th{:width => "120", :class => "update_column"}
           %span
       - @reports.each_with_index do |r, i|
         %tr{:valign => "top", :class => !r.consistent && "validate_err"}
@@ -123,6 +125,8 @@
             %span= r.status == 0 ? "N/A" : r.operator_tests
           %td
             %span #{r.trainees}/#{r.pumpings}/#{r.repeats}
+          %td
+            %span{:style=>"white-space:nowrap"} #{r.comment}
           %td
             %span= r.auditor.nil? ? '' : r.auditor.name
           %td
