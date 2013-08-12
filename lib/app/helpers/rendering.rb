@@ -25,7 +25,7 @@ module Helpers
     "operator_tests" => "調度測試",
     "trainees" => "見習",
     "pumpings" => "抽班",
-    "repeats" => "重複",
+    "repeats" => "其它",
   }
   def log_content(change)
     name = @@field_names[change["f"]] || change["f"]
