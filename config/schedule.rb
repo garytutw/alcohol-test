@@ -22,3 +22,7 @@
 every 2.minutes do
   rake "receive"
 end
+
+every :day, :at => '11:55pm' do
+  rake "backup"
+end
