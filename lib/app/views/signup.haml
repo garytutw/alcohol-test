@@ -62,8 +62,8 @@
             %option{:value => 2, :selected => locals["permission_level"]=='2'?true:false} 登錄人員
     %br
     .field
-      .ui
-        %input{ :value => "新增帳號", :type => "submit"}
+      .collection
+        %input{ :value => "新增", :type => "submit"}
         %input{ :name => "cancel", :value => "取消", :type => "submit"}
       
 #navigation

@@ -1,0 +1,74 @@
+:css
+  tr.overrow {
+    background-color: #FFFF99;
+  }
+  tr.selected {
+    background-color: #FFFF00;
+  }
+  a.selected {
+    background-color: #FFFF00;
+  }
+  .ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
+  ul[id^='ui-id'] {display: none; top: 31px; left: 69px; width: 200px; list-style-type: none;}
+
+:javascript
+  $(function() {
+    $("#signup").click(function() {
+      window.location = "/manager/signup";
+    });
+
+    $('#employee_search_submit').click(function() {
+      var s = $('#empid').val();
+      window.location = "/manager/edit?id="+s;
+    });
+    $('#empid').autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "/manager/serial_inquiry",
+          dataType: "json",
+          data: {
+            style: "full",
+            maxRows: 12,
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            // alert(data.drivers);
+            response( $.map( data.users, function( item ) {
+              return {
+                label: item.id + " - " + item.name,
+                value: item.id
+              }
+            }));
+          }
+        });
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        $('#empid').val( ui.item.value );
+      }
+    });
+  });
+#wrapper
+  #report
+    %div
+      %h1{:style => "position: relative;"}
+        %span 人員搜尋
+        - if @current_user.permission_level == -1 || @current_user.permission_level == 1
+          %input{:id => "signup", :type => "button", :style => "position: absolute; right: 0px;", :value => "新增帳號"}  
+    #emp_search
+      #employee_picker.input
+        .ui-widget
+          %label{:for => 'employeeid'} 員工序號或姓名:
+          %input{:id => 'empid', :style => 'width: 7em;', :value => ''}
+          %input{:id => 'employee_search_submit', :type => 'button', :value => '搜尋'}   
+
+#navigation
+  %nav
+    %ul
+      %li
+        %a.selected{:href => "/manager/edit"} 新增修改帳號
+      - if @current_user.permission_level == -1
+        %li
+          %a{:href => "/manager/sitemgr"} 分站資訊維護

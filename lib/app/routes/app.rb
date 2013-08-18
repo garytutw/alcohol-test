@@ -11,10 +11,24 @@ class Application
     haml :manager
   end
   
+  get '/manager/serial_inquiry', :auth => :admin do
+    term = params['name_startsWith'] + '%'
+    @users = repository(:default).adapter.select(
+      "select * from users where id like '#{term}' or name like '#{term}' order by id LIMIT 12")
+    new_rows = @users.map {|row| Hash[:id => row.id, :name => row.name]}
+    {:users => new_rows}.to_json
+  end
+  
   get "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
     if @current_user.permission_level == -1 # admin
-      @users = User.all(:permission_level.lt => 2)
-      haml :user_list  
+      #@users = User.all(:permission_level.lt => 2)
+      #haml :user_list
+      if (params.has_key? "id")
+        @users = User.all(:id => params[:id])
+        haml :user_list 
+      else
+        haml :user_search
+      end  
     elsif @current_user.permission_level == 1 # site admin
       @users = Site.all(:id => @current_user.sites.map{|s| s.id}).users(:permission_level.gte => 1, :order => [ :permission_level.asc ])
       #@users = User.all(:permission_level.gte => 1, :sites => Array(@current_user.sites), :enabled => true, :order => [ :permission_level.asc ])
@@ -47,18 +61,21 @@ class Application
   	if params.has_key? "update"
   	  params[:user]["enabled"] = true
   		#params[:user]["site"] = Site.first(:id => params[:user][:site])
-      # user_attributes = params[:user]
-      # if params[:user][:password] == "" # not set in web page, keep the original passwd
-        # user_attributes.delete("password")
-        # user_attributes.delete("password_confirmation")
-      # end
+      user_attributes = params[:user]
+      if params[:user][:password] == "" && params[:user][:password_confirmation] == ""# not set in web page, keep the original passwd
+        user_attributes.delete("password")
+        user_attributes.delete("password_confirmation")
+      end
+      if params[:user]["deputy"].nil?
+        params[:user]["deputy"] = false
+      end
       if user.update(params[:user])
         user.site_users.all.destroy!
         params[:sites].map{|s| user.sites << Site.get(s)}
         user.save
         flash[:notice] = "使用者 #{user.name} 更新完成！"
-        redirect '/manager/edit'
-      else # replace original dm-validation errors with Chinese ones
+        redirect "/manager/edit"
+      else #replace original dm-validation errors with Chinese ones
         if user.errors[:password].to_s.include? "does not match"
           user.errors[:password] = ["密碼與密碼確認不符！"]
         else user.errors[:password].to_s.include? "characters long"
@@ -220,12 +237,14 @@ class Application
   post "/manager/sitenew", :auth => :admin do
     @sites ||= @sites = Site.all(:id.gte => 0) if @site.nil?
     if params.length > 0 # new site
-      site = Site.create(:name => params[:site], :seq => @sites.length + 1)
+      site = Site.create(:name => params[:site].strip, :seq => @sites.length + 1)
       if site.save
         redirect "/manager/sitemgr"
       else
         if site.errors[:name].to_s.include? "blank"
           site.errors[:name] = ["分站名稱不可為空值！"]
+        elsif site.errors[:name].to_s.include? "already taken"
+          site.errors[:name] = ["分站名稱不可重複！"]  
         end
         flash[:error] = site.errors.full_messages
         redirect "/manager/sitemgr"     

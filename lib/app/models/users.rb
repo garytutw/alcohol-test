@@ -13,6 +13,7 @@ class User
   property :permission_level, Integer, :default => 2
   #belongs_to :site, :required => false
   property :enabled, Boolean, :default => true
+  property :deputy, Boolean, :default => false # operator can act as siteMgr and v.v.
   
   validates_presence_of         :password, :unless => Proc.new { |t| t.password_hash }
   validates_presence_of         :password_confirmation, :unless => Proc.new { |t| t.password_hash }

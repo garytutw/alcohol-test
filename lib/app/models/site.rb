@@ -3,7 +3,7 @@ class Site
   include DataMapper::Resource
 
   property :id,     Serial
-  property :name,   String, :required => true, :length => 40
+  property :name,   String, :required => true, :length => 40, :unique => true
   property :seq,    Integer, :required => true
   property :active, Boolean, :default => true
 

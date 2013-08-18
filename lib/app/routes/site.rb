@@ -24,7 +24,7 @@ class Application
                    end
     @has_bc = true if current_user.in_role? :hq
     # not editable when status is 0 and user is auditor 
-    @editable = @site_report.status != 0 || !current_user.in_role?(:auditor)
+    @editable = @site_report.status != 0 || !current_user.in_role?(:auditor) || current_user.deputy
     show :site_report
   end
 
@@ -81,13 +81,14 @@ class Application
     case report.status
     when 0 # 未輸入
       report.inputter = current_user
-      report.auditor = current_user unless current_user.in_role? :operator
+      #report.auditor = current_user unless current_user.in_role? :operator
       state_changed = true
     when 1 # 未核覆
-      if !current_user.in_role? :operator
+      #if !current_user.in_role? :operator
+      if current_user != report.inputter
         report.auditor = current_user
         state_changed = true
-        log[:message] = "核覆資料" 
+        log[:message] = "核覆資料"
       end
     when 2 # 已核覆
       if current_user.in_role? :operator
