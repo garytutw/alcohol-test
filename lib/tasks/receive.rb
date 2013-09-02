@@ -46,7 +46,11 @@ def check_anomaly(record, limit, rule)
 end  
 def mail_handler mail
   begin
-      body = mail.text_part.decoded    
+    begin
+      body = mail.text_part.decoded
+    rescue Exception => e
+      raise "Unable to parse mail body with subject: #{mail.subject}"
+    end      
       record = Hash.new
       tester = Hash.new
       tmp = []
@@ -104,7 +108,13 @@ def mail_handler mail
         end
       end # end attachment
    
-      record[:driver] = Driver.first_or_create(tester)
+      #record[:driver] = Driver.first_or_create(tester)
+      the_driver = Driver.first_or_create({:serial =>  tester[:serial]}, {:name =>  tester[:name]}) # require serial match only
+      if (the_driver.name != tester[:name]) # client typing error
+        puts "Driver with serial #{tester[:serial]} name does not match, update to: #{tester[:name]}"
+        the_driver.update(:name => tester[:name])
+      end
+      record[:driver] = the_driver 
       record[:image] = filename  
       # puts "[DB] Inserting alcohol test record: #{record}"
       at = AlcoholTest.new(record)
@@ -120,6 +130,7 @@ def mail_handler mail
       end     
     rescue Exception => e
       # [Todo] save maleformat email to file for further processing ~
+      mail.skip_deletion
       print "Error receiving email at " + Time.now.to_s + "::: " + e.message + "\n"
       #next   
     end
