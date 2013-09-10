@@ -6,7 +6,7 @@ class Application
 
   get '/search', :auth => :hq do
     @available_dates, @max_date, @min_date = calc_dates
-    @sites = Site.all(:id.gte => 1, :order => [:seq.asc])
+    @sites = Site.all(:id.gte => 1, :order => [:seq.asc], :active => true)
 
     show :search
   end

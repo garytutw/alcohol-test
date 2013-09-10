@@ -39,7 +39,10 @@
       .field
         %label.label{:for => "user_name"} 員工姓名
         .ui
-          %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => @user.name, :disabled => "disabled"}
+          - if !current_user.in_role? :operator
+            %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => @user.name}
+          - else
+            %input{ :id => "user_name", :name => "user[name]", :size => 10, :type => "text", :value => @user.name, :disabled => "disabled"}   
       .field
         %label.label{:for => "user_password"} 密碼
         .ui
