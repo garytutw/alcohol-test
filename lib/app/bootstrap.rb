@@ -20,6 +20,7 @@ class Application < Sinatra::Base
   set :root, "#{root_dir}"
   use Rack::Session::Cookie, :secret => 'superdupersecret'
   helpers Helpers
+  helpers Sinatra::JSON
   register Sinatra::Flash
 	
 	# define ACL routing condition

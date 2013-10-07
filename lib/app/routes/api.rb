@@ -1,5 +1,9 @@
+# encoding: utf-8
+require 'RMagick'
 
 class Application
+
+  IMG_DIR = 'photos'
 
   put '/MASTER.TDB' do
     filename = 'lib/app/public/MASTER.TDB'
@@ -17,4 +21,64 @@ class Application
     end
   end
 
+  post '/check_alc' do
+    site = Site.first_or_create({:name => params["site"].strip}, {:seq => 1})
+    driver = Driver.first_or_create({:serial => params["id"]}, {:name => params["name"]})
+    if (driver.name != params["name"]) # client typing error
+      puts "Driver with serial #{params["serial"]} name does not match, update to: #{params["name"]}"
+      driver.update(:name => params["name"])
+    end
+    if AlcoholTest.first({:driver => driver, :site => site, :time => DateTime.iso8601(params["timestamp"])})
+      json :result => "exist" 
+    else
+      json :result => "notexist"
+    end
+  end
+
+  def create_directory_if_not_exists(directory_name)
+    Dir.mkdir(directory_name) unless File.exists?(directory_name)
+    return directory_name
+  end
+
+  post '/add_alc' do
+    site = Site.first_or_create({:name => params["site"].strip}, {:seq => 1})
+    driver = Driver.first_or_create({:serial => params["id"]}, {:name => params["name"]})
+    if (driver.name != params["name"]) # client typing error
+      puts "Driver with serial #{params["serial"]} name does not match, update to: #{params["name"]}"
+      driver.update(:name => params["name"])
+    end
+    filename = params["filename"]
+    if filename && params["image"]
+      begin
+        create_directory_if_not_exists(File.join(IMG_DIR,''))
+        pathName = create_directory_if_not_exists(File.join(IMG_DIR, filename[0..1]))
+        pathName = create_directory_if_not_exists(File.join(pathName, filename[2..3]))
+        img = Magick::Image.read_inline(params["image"])[0]
+        bg = Magick::Image.new(190, 50) {self.background_color = '#a0a0a0'}
+        txt = Magick::Draw.new
+        bg.annotate(txt, 0, 0, 0, 0, "酒測值: #{"%.3f" % params["alc"].to_f}") {
+          txt.font = 'lib/app/fonts/DroidSansFallback.ttf'
+          txt.gravity = Magick::CenterGravity
+          txt.pointsize = 30 
+          txt.stroke = 'transparent'
+          txt.fill = '#ff0000'
+          txt.font_weight = Magick::BoldWeight
+        }
+        img = img.dissolve(bg, 1, 1, Magick::SouthEastGravity)
+        File.open(pathName + File::SEPARATOR + filename, "w+b", 0644) {|f| f.write img.to_blob}
+      rescue Exception => e
+        status 500
+        puts "Unable to save data for image: #{filename} because #{e.message}"
+        return
+      end
+    end 
+    filename = filename || "NA"
+    if AlcoholTest.first_or_create(
+      {:driver => driver, :site => site, :time => DateTime.iso8601(params["timestamp"])},
+      {:value => params["alc"], :image => filename})
+      status 200
+    else
+      status 500
+    end
+  end
 end

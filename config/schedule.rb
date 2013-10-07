@@ -19,9 +19,9 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 2.minutes do
-  rake "receive"
-end
+#every 2.minutes do
+#  rake "receive"
+#end
 
 every :day, :at => '11:55pm' do
   rake "backup"
