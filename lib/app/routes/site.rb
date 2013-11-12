@@ -30,11 +30,12 @@ class Application
 
   post '/site/:site_id/:date', :auth => [:hq, :auditor, :operator] do
     log = {}
+    @update = params[:update].nil?? false: true # update or confirm
     @date = params[:date]
     @site_report = SiteReport.first(:site_id => params[:site_id], :date => @date)
     @site_name = @site_report.site.name
     @available_dates = available_dates(@site_name)
-    @errors, state_changed = authorize_update(current_user, @site_report, log)
+    @errors, state_changed = authorize_update(current_user, @site_report, log, @update)
     @errors.merge! validate(params["site_report"])
     if @errors.size > 0
       flash[:error] = @errors[:authorize] 
@@ -75,24 +76,35 @@ class Application
     show :site_report
   end
 
-  def authorize_update(current_user, report, log)
+  def authorize_update(current_user, report, log, update)
     state_changed = false
     errors = {}
     case report.status
     when 0 # 未輸入
-      report.inputter = current_user
-      #report.auditor = current_user unless current_user.in_role? :operator
-      state_changed = true
-    when 1 # 未核覆
-      #if !current_user.in_role? :operator
-      if current_user != report.inputter
-        report.auditor = current_user
+      if update
+        report.inputter = current_user  
         state_changed = true
+      else
+        errors[:authorize] = "無法核覆未輸入報告"
+      end  
+    when 1 # 未核覆
+      if update
+        if !current_user.in_role?(:hq) #if hq updates, not show his name in final report
+          report.inputter = current_user
+        end    
+      else
+        report.auditor = current_user
         log[:message] = "核覆資料"
+        state_changed = true
       end
     when 2 # 已核覆
-      if current_user.in_role? :operator
+      if (current_user.in_role?(:operator) && !current_user.deputy) or update
         errors[:authorize] = "無法更改已核覆報告"
+      elsif # who can perform confirmation
+        if !current_user.in_role?(:hq) #if hq updates, not show his name in final report
+          report.auditor = current_user
+        end
+        log[:message] = "核覆資料"  
       end
     end
     [errors, state_changed]

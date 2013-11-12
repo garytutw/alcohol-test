@@ -123,9 +123,9 @@
                  :value => @site_report.auditor_name, :disabled => "disabled"}
       %br
         .buttons
-          - if !current_user.in_role? :auditor or @site_report.status == 2 or current_user.deputy
-            %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
-          - if current_user.in_role? :auditor or current_user.deputy
+          - if !current_user.in_role?(:auditor) or current_user.deputy
+            %input{:name => "update", :value => "更新", :type => "submit", :disabled => "disabled"}
+          - if !current_user.in_role?(:operator) or current_user.deputy
             %input{:id => "confirm", :value => "核覆", :type => "submit"}
       #logs
         %h5 記錄
