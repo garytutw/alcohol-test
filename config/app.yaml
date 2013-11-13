@@ -1,4 +1,5 @@
 anomaly_bound: 0.0
 # Serial number which starts with 1 will not be checked for anomaly mail sending
 tester_serial: ^(?!1)\d*
-
+# SiteMgr default can be assigned multiple sites, for operator, you need to add site id below to enable.
+enable_multi_site: [2]

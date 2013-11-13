@@ -100,11 +100,11 @@ class Application
     when 2 # 已核覆
       if (current_user.in_role?(:operator) && !current_user.deputy) or update
         errors[:authorize] = "無法更改已核覆報告"
-      elsif # who can perform confirmation
+      else # who can perform confirmation
         if !current_user.in_role?(:hq) #if hq updates, not show his name in final report
           report.auditor = current_user
         end
-        log[:message] = "核覆資料"  
+        log[:message] = "核覆資料"
       end
     end
     [errors, state_changed]
