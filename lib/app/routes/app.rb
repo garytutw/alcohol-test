@@ -2,6 +2,7 @@
 require 'bcrypt'
 
 class Application
+  @@app_config = YAML.load_file('config/app.yaml')
   def find_users level
     @users = repository(:default).adapter.select(
       "select * from users where permission_level < #{level} order by site_id ")
@@ -42,7 +43,8 @@ class Application
   end
   
   get "/manager/edit/:id", :auth => [:admin, :hq, :auditor, :operator] do
-     @user = User.first(:id => params[:id])
+      @user = User.first(:id => params[:id])
+      @multi = @user.sites.map.detect {|s| @@app_config['enable_multi_site'].include?(s.id)}
       if @user.nil?
         flash[:error] = "此員工帳號不存在"
         redirect "/manager/edit"

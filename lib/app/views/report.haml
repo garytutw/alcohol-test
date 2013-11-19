@@ -86,11 +86,9 @@
         %th{:width => "120"}
           %span 登錄人
         %th{:width => "100"}
-          %span 受測總次數
+          %span 受測總數
         %th{:width => "100"}
           %span 異常次數 
-        %th{:width => "100"}
-          %span 總班次數
         %th{:width => "100"}
           %span 調度測試
         %th{:width => "100"}
@@ -99,7 +97,7 @@
           %span 主管姓名
         %th{:width => "120"}
           %span 主管覆核
-        %th{:width => "180"}
+        %th{:width => "160"}
           %span 備註
         %th{:width => "120", :class => "update_column"}
           %span
@@ -107,7 +105,7 @@
         %tr{:valign => "top", :class => !r.consistent && "validate_err"}
           %td
             %span #{i+1}
-          %td
+          %td{:style => "white-space:nowrap"}
             %span #{r.site.name}
           %td
             %span= r.inputter.nil? ? '' : r.inputter.name
@@ -119,8 +117,6 @@
                 %a{:class => "anomaly", :href => "/anomaly/#{r.site_id}/#{@date}"}= r.anomaly_tests
               - else
                 = r.anomaly_tests 
-          %td
-            %span= r.status == 0 ? "N/A" : r.total_trips
           %td
             %span= r.status == 0 ? "N/A" : r.operator_tests
           %td

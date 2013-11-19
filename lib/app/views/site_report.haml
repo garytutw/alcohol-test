@@ -14,15 +14,15 @@
         return false;
       }
     });
-    if ($("#total_trips").val() == '')
-      dirty = false
+    /*if ($("#total_trips").val() == '')
+      dirty = false*/
     if (dirty)
       $(".buttons input").removeAttr("disabled");
     else
       $(".buttons input").attr("disabled", "disabled");
   }
   function validate2() {
-    var total_trips = $("#total_trips").val();
+    /*var total_trips = $("#total_trips").val();
     if (Number(total_trips) != total_trips) {
       alert("總班次數 必須是整數");
       return false;
@@ -35,9 +35,9 @@
     if (total_tests != calc_num) {
       alert("總班次數+調度測試+見習+抽班+其他" + calc_num + " 不等於 受測總次數(" + total_tests + ")");
       return false;
-    }
-    if ($("#comment").val().length > 10) {
-      alert("備註欄 字數不能超過10個字");
+    }*/
+    if ($("#comment").val().length > 15) {
+      alert("備註欄 字數不能超過15個字");
       return false;
     }
     return true;
@@ -50,9 +50,9 @@
     }
     $("input.editable").keyup(validate);
     $("select.selectable").change(validate);
-    if ($("#total_trips").val() == 0) {
+    /*if ($("#total_trips").val() == 0) {
       $("#confirm").attr("disabled", "disabled");
-    }
+    }*/
     $("form").submit(validate2);
     $("#logs").accordion({
       header: 'h5',
@@ -95,8 +95,7 @@
           %input{:id => "anomaly_tests", :name => "site_report[anomaly_tests]", :type => "text",
                  :value => @site_report.anomaly_tests, :disabled => "disabled"}
         %input{:name => "site_report[anomaly_tests]", :type => "hidden", :value => @site_report.anomaly_tests}
-      - [{:id => "total_trips", :value => @site_report.total_trips, :label => "總班次數"},
-         {:id => "operator_tests", :value => @site_report.operator_tests, :label => "調度測試", :isdropdown => true},
+      - [{:id => "operator_tests", :value => @site_report.operator_tests, :label => "調度測試", :isdropdown => true},
          {:id => "trainees", :value => @site_report.trainees, :label => "見習", :isdropdown => true},
          {:id => "pumpings", :value => @site_report.pumpings, :label => "抽班", :isdropdown => true},
          {:id => "repeats", :value => @site_report.repeats, :label => "其他", :isdropdown => true},
@@ -123,9 +122,9 @@
                  :value => @site_report.auditor_name, :disabled => "disabled"}
       %br
         .buttons
-          - if !current_user.in_role? :auditor or @site_report.status == 2 or current_user.deputy
-            %input{ :value => "更新", :type => "submit", :disabled => "disabled"}
-          - if current_user.in_role? :auditor or current_user.deputy
+          - if !current_user.in_role?(:auditor) or current_user.deputy
+            %input{:name => "update", :value => "更新", :type => "submit", :disabled => "disabled"}
+          - if !current_user.in_role?(:operator) or current_user.deputy
             %input{:id => "confirm", :value => "核覆", :type => "submit"}
       #logs
         %h5 記錄
