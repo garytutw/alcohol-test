@@ -6,3 +6,4 @@ tmp/*
 *.project
 photos/*
 MASTER.TDB
+backups/*
