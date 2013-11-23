@@ -16,7 +16,7 @@ class Application < Sinatra::Base
 
   ## Sinatra Settings ##
   # http://www.sinatrarb.com/configuration.html
-  enable :sessions
+  #enable :sessions
   set :root, "#{root_dir}"
   use Rack::Session::Cookie, :secret => 'superdupersecret'
   helpers Helpers
