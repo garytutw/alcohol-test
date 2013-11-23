@@ -24,7 +24,7 @@ class Application
     dt_upper = ((@date + 1).to_time - 1).to_datetime
     dt_lower = @date.to_time.to_datetime
     @reports = []
-    Site.all(:order => [:seq.asc]).each do |s|
+    Site.all(:active => true, :order => [:seq.asc]).each do |s|
       sr = SiteReport.get(@date, s.id)
       next if !sr or sr.total_tests == 0
       @reports << sr

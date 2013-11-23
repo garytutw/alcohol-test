@@ -102,7 +102,7 @@
         %th{:width => "120", :class => "update_column"}
           %span
       - @reports.each_with_index do |r, i|
-        %tr{:valign => "top", :class => !r.consistent && "validate_err"}
+        %tr{:valign => "top", :class => !(r.status==2) && "validate_err"}
           %td
             %span #{i+1}
           %td{:style => "white-space:nowrap"}

@@ -72,8 +72,10 @@ class Application
         params[:user]["deputy"] = false
       end
       if user.update(params[:user])
-        user.site_users.all.destroy!
-        params[:sites].map{|s| user.sites << Site.get(s)}
+        if params[:sites] != nil
+          user.site_users.all.destroy!
+          params[:sites].map{|s| user.sites << Site.get(s)}
+        end
         user.save
         flash[:notice] = "使用者 #{user.name} 更新完成！"
         redirect "/manager/edit"

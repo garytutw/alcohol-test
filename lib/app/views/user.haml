@@ -1,5 +1,8 @@
 :javascript
   $(document).ready(function(){
+  if("#{@current_user.permission_level}"=="2"){
+      $("#siteSelect").attr('disabled', 'disabled');
+  }
   $("#permitSelect").change(function () {
       var int = "";
       $("#permitSelect option:selected").each(function () {
