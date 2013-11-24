@@ -71,6 +71,27 @@ namespace :db do
         user.rollback
       end      
     end
-  end              
+  end
+
+  desc 'Remove duplicate AlcoholTest records'
+  task :rmdup do
+    prev = nil
+    same = 0
+    flunctuated = 0
+    AlcoholTest.all(:order => [:site_id.asc, :driver_id.asc, :time.desc]).each_cons(2) do |p, c|
+      if p.site_id == c.site_id and p.driver_id == c.driver_id
+        d = c.time - p.time
+        if d == 0
+          same += 1 if p.destroy
+        elsif d.abs < 2.0/86400
+          flunctuated += 1 if p.destroy
+        end
+      end
+    end
+    puts "Deleted #{same} records for identical ones" if same > 0
+    puts "Deleted #{flunctuated} records for the delta of 1 second" if flunctuated > 0
+    puts "No duplicated record exist" if same == 0 and flunctuated == 0
+  end
+
 end
 
