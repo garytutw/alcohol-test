@@ -176,14 +176,11 @@ class Application
   end
 
   get "/logout" do
-    if current_user
-      @current_user.generate_token
-      response.delete_cookie "user"
-      session[:user] = nil
-      session[:redirect_to] = nil
-      flash[:notice] = "Successfully logged out"
-      session.clear
-    end
+    response.delete_cookie "user"
+    session[:user] = nil
+    session[:redirect_to] = nil
+    flash[:notice] = "Successfully logged out"
+    session.clear
     redirect "/login"
   end
   
