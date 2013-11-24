@@ -52,7 +52,8 @@ class Application
         param = nil
         @sites ||= Site.all(:id.gte => 1, :order => [ :seq.asc ]) if @site.nil?
         haml :user
-      end
+      end
+
   end
   
   post "/manager/edit", :auth => [:admin, :hq, :auditor, :operator] do
@@ -180,7 +181,8 @@ class Application
       response.delete_cookie "user"
       session[:user] = nil
       session[:redirect_to] = nil
-      flash[:notie] = "Successfully logged out"
+      flash[:notice] = "Successfully logged out"
+      session.clear
     end
     redirect "/login"
   end
