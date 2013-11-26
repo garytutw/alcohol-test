@@ -42,29 +42,26 @@ class Application
     return directory_name
   end
 
-  def get_recipients site_id
-    cclist = ''
-    SiteNotifier.all(:site_id => site_id).each do |notify|
-      cclist += notify.email + ","
-    end
-    cclist.chomp(",")  
-  end
-
   def check_anomaly(record, limit, rule)
     puts "[Debug] Checking anomaly rules: record[:value] > limit => #{record[:value] > limit} && !!(record[:driver].serial.to_s =~ rule) => #{!!(record[:driver].serial.to_s =~ rule)}"
     begin
       if record[:value] > limit && !!(record[:driver].serial.to_s =~ rule)
         filename = record[:image]
+        cclist = ''
+        SiteNotifier.all(:site_id => record[:site].id).each do |notify|
+          cclist += notify.email + ","
+        end
+        cclist.chomp(",")  
         @email = Mail.new do
           from    'alcoholtest@ubus.com.tw'
-          to      get_recipients record[:site].id
+          to      cclist
           subject "[異常酒精檢測結果] 員工編號:#{record[:driver].serial} 員工姓名:#{record[:driver].name}" + 
           " 檢測結果:#{record[:value]} 日期時間:#{record[:time]} 檢測地點:#{record[:site].name}"
           text_part do
             content_type 'text/plain; charset=UTF-8'
             body    "酒測圖片如附件"
           end
-          add_file "#{File.join(File.dirname(__FILE__), '../../..', IMG_DIR, filename[0..1], filename[2..3], filename)}"
+          add_file "#{File.join(File.dirname(__FILE__), '../../..', IMG_DIR, filename[0..1], filename[2..3], filename)}" if filename
         end
         @email.deliver!
         puts "[Debug] Send Anomaly Mail Done!!"
