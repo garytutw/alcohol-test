@@ -10,12 +10,13 @@ task :backup do
   else
     puts "Backup for #{today}"
     system "tar czf #{filename} database.db photos/"
-    bs = Dir.glob('backups/backup_*.tgz').sort
-    if bs.length > 7
-      bs.slice(0, bs.length-7).each do |f|
-        puts "Deleting backups/#{f}"
-        system "rm -f backups/#{f}"
-      end
+  end
+  # only keep 7 backups
+  bs = Dir.glob('backups/backup_*.tgz').sort
+  if bs.length > 7
+    bs.slice(0, bs.length-7).each do |f|
+      puts "Deleting #{f}"
+      system "rm -f #{f}"
     end
   end
 end
