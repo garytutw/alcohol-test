@@ -1,0 +1,21 @@
+#wrapper
+  #content
+    %div
+      %h1{:style => "position: relative;"}
+        %span 分站訊息通知
+        
+    %form{:action => "/site/broadcast", :method => "post"}
+      %label{:for => 'info'} 通知訊息:
+      %input{:name => "info", :id => 'info', :style => 'width: 25em;', :value => "#{@info}"}
+      %input{:id => 'info_submit', :type => 'submit', :value => '送出'}   
+
+#navigation
+  %nav
+    %ul
+      %li
+        %a{:href => "/manager/edit"} 新增修改帳號
+      - if @current_user.permission_level == -1
+        %li
+          %a{:href => "/manager/sitemgr"} 分站資訊維護
+        %li
+          %a{:href => "/manager/broadcast"} 分站訊息通知

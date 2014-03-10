@@ -8,6 +8,11 @@ class Application
       "select * from users where permission_level < #{level} order by site_id ")
   end
   
+	get "/manager/broadcast", :auth => :admin do
+	  @info = get_broadcast
+    haml :broadcast
+  end
+  
 	get "/manager", :auth => [:admin, :auditor] do
     haml :manager
   end
@@ -179,7 +184,7 @@ class Application
     response.delete_cookie "user"
     session[:user] = nil
     session[:redirect_to] = nil
-    flash[:notice] = "Successfully logged out"
+    flash[:notice] = "帳號已成功登出"
     session.clear
     redirect "/login"
   end

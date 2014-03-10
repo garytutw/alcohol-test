@@ -1,11 +1,27 @@
 #encoding: utf-8
 class Application
+  @@news = ''
   def available_dates(site)
     limit = (current_user.in_role? :hq) ? 7 : 2
     repository(:default).adapter.select(
       "select date from site_reports, sites where sites.name='#{site}' and sites.id=site_reports.site_id order by date desc limit #{limit}")
   end
-
+  def get_broadcast
+    return @@news
+  end
+  def set_broadcast(value)
+    @@news = value
+  end
+  
+  get '/site/broadcast', :auth => [:auditor, :operator] do
+    return get_broadcast
+  end
+  post '/site/broadcast', :auth => :admin do
+    set_broadcast params[:info]
+    flash[:notice] = "訊息已成功送出"
+    redirect :manager
+  end
+  
   get '/site/:site_id/?:date?', :auth => [:hq, :auditor, :operator] do
     @date = params[:date] || Date.today
     @site_report = case params[:date].nil?
@@ -25,6 +41,7 @@ class Application
     @has_bc = true if current_user.in_role? :hq
     # not editable when status is 0 and user is auditor 
     @editable = @site_report.status != 0 || !current_user.in_role?(:auditor) || current_user.deputy
+    @info = get_broadcast
     show :site_report
   end
 

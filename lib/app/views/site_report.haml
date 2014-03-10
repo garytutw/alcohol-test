@@ -1,4 +1,5 @@
 -# coding: UTF-8
+%script{language: "javascript", src: "/js/jquery.marquee.min.js"}
 :javascript
   function validate() {
     $(".buttons input").attr("disabled", "disabled");
@@ -43,6 +44,18 @@
     return true;
   }
   $(function() {
+    var url = '/site/broadcast',
+    $mq = $('.marquee');
+    $('.marquee').marquee();
+    function count() {
+      $mq.marquee('destroy').load(url, function(){
+        $mq.marquee();
+      });
+    }
+    // refresh every 5 mins
+    var auto_refresh = setInterval(function() { count() }, 300000);
+    count();
+    // following for input form check
     var editable = #{defined?(@editable) ? @editable : 'true' };
     if (!editable) {
       $("input.editable").attr('disabled', 'disabled');
@@ -64,7 +77,9 @@
       window.location = "/site/" + this.value;
     });
   });
- 
+
+.marquee 
+  #{@info}            
 #wrapper
   #report
     - if !@has_bc.nil? and @has_bc

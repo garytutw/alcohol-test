@@ -592,3 +592,9 @@ display: none;
 div.field input {
 width: 11em;
 }
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  border: 0px solid #ccc;
+
+}
