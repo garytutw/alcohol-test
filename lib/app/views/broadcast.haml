@@ -1,21 +1,41 @@
+:javascript
+  $(function() {
+    $('input[id^="info"]').change(function() {
+      var idx = $(this).attr('id').substr(4);
+      var _id = "input#anchor" + idx;
+      if($(this).attr('value').trim().length > 0) {
+        $(_id).attr('value', "#{@current_user.name}");
+      } else {
+        $(_id).attr('value', "");
+      }  
+    });
+  });
+
 #wrapper
-  #content
+  #report
     %div
-      %h1{:style => "position: relative;"}
+      %h2{:style => "position: relative;"}
         %span 分站訊息通知
         
     %form{:action => "/site/broadcast", :method => "post"}
-      %label{:for => 'info'} 通知訊息:
-      %input{:name => "info", :id => 'info', :style => 'width: 25em;', :value => "#{@info}"}
+      - (0..9).each do |i|  
+        %label{:for => "anchor#{i}"} 通知訊息##{i} - 發文者:
+        %input{:name => "anchor[#{i}]", :id => "anchor#{i}", :style => 'width: 4em;', :value => @anchor[i.to_s], :readonly => "readonly"}
+        %label{:for => 'info'}  :
+        %input{:name => "info[#{i}]", :id => "info#{i}", :style => 'width: 25em;', :value => @info[i.to_s]}
+        %p
+
       %input{:id => 'info_submit', :type => 'submit', :value => '送出'}   
 
 #navigation
   %nav
     %ul
       %li
+        %a{:href => "/search"} 搜尋
+      %li
+        %a{:href => "/broadcast"} 分站訊息通知  
+      - @available_dates.each do |d|
+        %li
+          %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d
+      %li
         %a{:href => "/manager/edit"} 新增修改帳號
-      - if @current_user.permission_level == -1
-        %li
-          %a{:href => "/manager/sitemgr"} 分站資訊維護
-        %li
-          %a{:href => "/manager/broadcast"} 分站訊息通知

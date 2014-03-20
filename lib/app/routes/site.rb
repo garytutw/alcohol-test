@@ -1,25 +1,41 @@
 #encoding: utf-8
 class Application
-  @@news = ''
+  @@news = Hash.try_convert(YAML.load_file('config/broadcast.yaml'))
   def available_dates(site)
     limit = (current_user.in_role? :hq) ? 7 : 2
     repository(:default).adapter.select(
       "select date from site_reports, sites where sites.name='#{site}' and sites.id=site_reports.site_id order by date desc limit #{limit}")
   end
   def get_broadcast
-    return @@news
+    result = ''
+    return '' if @@news['info'].nil?
+    @@news['info'].values.each_with_index do |i, idx|
+      if i.strip.length > 0 
+        result = result + "<font color='#0505fc'>[#{@@news['anchor'][idx.to_s]}]： </font>" + i + "<span class='tab'></span>"
+      end  
+    end
+    return result
   end
-  def set_broadcast(value)
-    @@news = value
+  
+  def set_broadcast(value1)
+    @@news = value1
+    File.open('config/broadcast.yaml', 'w') {|f| f.write @@news.to_yaml } #Store
+  end
+  
+  get "/broadcast", :auth => :hq do
+    @available_dates, @max_date, @min_date = calc_dates
+    @info = @@news['info'].nil? ? {} : @@news['info']
+    @anchor = @@news['anchor'].nil? ? {} : @@news['anchor']
+    show :broadcast
   end
   
   get '/site/broadcast', :auth => [:auditor, :operator] do
     return get_broadcast
   end
-  post '/site/broadcast', :auth => :admin do
-    set_broadcast params[:info]
+  post '/site/broadcast', :auth => :hq do
+    set_broadcast params
     flash[:notice] = "訊息已成功送出"
-    redirect :manager
+    redirect :broadcast
   end
   
   get '/site/:site_id/?:date?', :auth => [:hq, :auditor, :operator] do

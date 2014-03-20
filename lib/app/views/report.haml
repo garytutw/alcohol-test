@@ -146,6 +146,8 @@
     %ul
       %li
         %a{:href => "/search"} 搜尋
+      %li
+        %a{:href => "/broadcast"} 分站訊息通知  
       - @available_dates.each do |d|
         %li
           %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d

@@ -8,11 +8,6 @@ class Application
       "select * from users where permission_level < #{level} order by site_id ")
   end
   
-	get "/manager/broadcast", :auth => :admin do
-	  @info = get_broadcast
-    haml :broadcast
-  end
-  
 	get "/manager", :auth => [:admin, :auditor] do
     haml :manager
   end
@@ -168,7 +163,7 @@ class Application
     if user = User.first(:id => params[:id], :enabled => true)
       if user.password_hash == BCrypt::Engine.hash_secret(params[:password], user.password_salt)
         session[:user] = user.token 
-        response.set_cookie "user", {:value => user.token, :expires => (Time.now + 24*60*60)} if params[:remember_me]
+        response.set_cookie "user", {:value => user.token, :expires => (Time.now + 24*60*60)}
         redirect_last
       else
         flash[:error] = "員工序號與密碼不符"

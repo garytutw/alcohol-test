@@ -46,10 +46,10 @@
   $(function() {
     var url = '/site/broadcast',
     $mq = $('.marquee');
-    $('.marquee').marquee();
+    $('.marquee').marquee({duration: 15000});
     function count() {
       $mq.marquee('destroy').load(url, function(){
-        $mq.marquee();
+        $mq.marquee({duration: 15000});
       });
     }
     // refresh every 5 mins
@@ -79,7 +79,7 @@
   });
 
 .marquee 
-  #{@info}            
+%br        
 #wrapper
   #report
     - if !@has_bc.nil? and @has_bc

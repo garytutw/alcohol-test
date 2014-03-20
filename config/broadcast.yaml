@@ -1,0 +1,4 @@
+---
+tests:
+  :test1: 'v1'
+  :test2: 'v2'

@@ -446,7 +446,7 @@ nav label {
 	margin: 20px 0;
 	padding-right: 10px;
 	border: none;
-	margin-top: 80px;
+	margin-top: 60px;
 }
 
 .columns_mgr {
@@ -596,5 +596,9 @@ width: 11em;
   width: 100%;
   overflow: hidden;
   border: 0px solid #ccc;
-
+  font-size:18px;
+  font-style:italic;
+}
+span.tab{
+    padding: 0 80px; /*desired space for marquee*/
 }

@@ -18,7 +18,7 @@ class Application < Sinatra::Base
   # http://www.sinatrarb.com/configuration.html
   #enable :sessions
   set :root, "#{root_dir}"
-  use Rack::Session::Cookie, :secret => 'superdupersecret'
+  use Rack::Session::Cookie, :key => 'rack.session', :expire_after => 86400, :secret => 'superdupersecret'
   helpers Helpers
   helpers Sinatra::JSON
   register Sinatra::Flash
