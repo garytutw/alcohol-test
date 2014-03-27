@@ -77,9 +77,9 @@
       window.location = "/site/" + this.value;
     });
   });
-
-.marquee 
-%br        
+- if @current_user.permission_level > 0
+  .marquee 
+  %br        
 #wrapper
   #report
     - if !@has_bc.nil? and @has_bc

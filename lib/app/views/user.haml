@@ -76,7 +76,7 @@
               %option{:value => 1, :selected => @user.permission_level==1?true:false} 分站主管
             - if @current_user.in_role? :admin or @user.permission_level==2
               %option{:value => 2, :selected => @user.permission_level==2?true:false} 登錄人員
-      - if @current_user.in_role? :admin or @current_user.in_role? :auditor
+      - if @current_user.in_role? :admin or @current_user.in_role? :auditor or @user.deputy?
         .field  
           %label.label{:for => "user_deputy", :title => "分站主管可俱登錄人身份 反之亦然", :style => "cursor: pointer;"} 俱代理身份
           .ui     
