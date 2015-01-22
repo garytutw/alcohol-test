@@ -1,5 +1,13 @@
+%script{:src => "/js/jquery.fileupload.js"}
+%script{:src => "/js/jquery.iframe-transport.js"}
 :javascript
   $(function() {
+    // for page display
+    $("#accordion").accordion({
+      collapsible: true,
+      heightStyle: 'content'
+    });
+    // for broadcast function
     $('input[id^="info"]').change(function() {
       var idx = $(this).attr('id').substr(4);
       var _id = "input#anchor" + idx;
@@ -9,23 +17,51 @@
         $(_id).attr('value', "");
       }  
     });
+    // for uploading csv file
+    $('#fileupload').fileupload({
+      multipart: false,
+      type: 'PUT',
+      formAcceptCharset: 'cp950',
+        fail: function(e, data) {
+          alert(data.errorThrown);
+      },  
+        done: function getLog(e, data) {
+          $('#upload input').hide();
+          $.ajax({
+            url: "/site/getLog",
+            type: 'get',
+            dataType: 'text',
+            success: function(text) {
+                $('#log_ctx').remove();
+                $('upload').append(text);
+                $('#accordion').accordion();
+                if(text.indexOf('Done!') == -1) {
+                  setTimeout(getLog, 1000); // refresh every 1 seconds
+                }
+            }
+          });
+        },
+    });
   });
 
 #wrapper
   #report
     %div
       %h2{:style => "position: relative;"}
-        %span 分站訊息通知
-        
-    %form{:action => "/site/broadcast", :method => "post"}
-      - (0..9).each do |i|  
-        %label{:for => "anchor#{i}"} 通知訊息##{i} - 發文者:
-        %input{:name => "anchor[#{i}]", :id => "anchor#{i}", :style => 'width: 4em;', :value => @anchor[i.to_s], :readonly => "readonly"}
-        %label{:for => 'info'}  :
-        %input{:name => "info[#{i}]", :id => "info#{i}", :style => 'width: 25em;', :value => @info[i.to_s]}
-        %p
-
-      %input{:id => 'info_submit', :type => 'submit', :value => '送出'}   
+        %span 站務功能
+    #accordion
+      %h3 分站訊息通知
+      %form{:action => "/site/broadcast", :method => "post"}
+        - (0..9).each do |i|  
+          %label{:for => "anchor#{i}"} 通知訊息##{i} - 發文者:
+          %input{:name => "anchor[#{i}]", :id => "anchor#{i}", :style => 'width: 4em;', :value => @anchor[i.to_s], :readonly => "readonly"}
+          %label{:for => 'info'}  :
+          %input{:name => "info[#{i}]", :id => "info#{i}", :style => 'width: 25em;', :value => @info[i.to_s]}
+          %p
+        %input{:id => 'info_submit', :type => 'submit', :value => '送出'}
+      %h3 員工檔更新上載
+      %form{:action => "/site/upload", :method => "put"}
+        %input{:id => "fileupload", :type => "file", :name => "files[]", :enctype => "multipart/form-data"}
 
 #navigation
   %nav
@@ -33,7 +69,7 @@
       %li
         %a{:href => "/search"} 搜尋
       %li
-        %a{:href => "/broadcast"} 分站訊息通知  
+        %a{:href => "/broadcast"} 站務系統
       - @available_dates.each do |d|
         %li
           %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d

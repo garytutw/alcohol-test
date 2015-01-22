@@ -37,7 +37,27 @@ class Application
     flash[:notice] = "訊息已成功送出"
     redirect :broadcast
   end
-  
+  # for uploading csv file which will be converted to MS MDB file (MASTER.TDB)
+  get '/site/getLog' do
+    output = `cat ./lib/tools/csv2mdb/log.out`
+    if output.include? "Done!"
+      Process.wait
+      return format_log output
+    else  
+      return format_log output
+    end
+  end
+
+  put '/site/upload', :auth => :hq do
+    filename = './lib/tools/csv2mdb/master_import.csv'
+    File.open(filename, 'wb') {|f| f.write(request.body.read)}
+    `rm ./lib/tools/csv2mdb/log.out`
+    `echo 檔案已成功上傳 > ./lib/tools/csv2mdb/log.out`
+    fork {system('sh ./lib/tools/csv2mdb/csv2master.sh')}
+    status 200
+  end
+
+  # for site report ...
   get '/site/:site_id/?:date?', :auth => [:hq, :auditor, :operator] do
     @date = params[:date] || Date.today
     @site_report = case params[:date].nil?
@@ -155,4 +175,11 @@ class Application
   def is_integer(s)
      !!(s.strip =~ /^[0-9]+$/)
   end
+  def format_log(input)
+    str = '<div id="log_ctx">'
+    input.each_line {|l|
+      str += "#{l.chomp}<br>"
+    }
+    str + '</div>'
+  end 
 end
