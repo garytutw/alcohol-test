@@ -33,7 +33,7 @@
             dataType: 'text',
             success: function(text) {
                 $('#log_ctx').remove();
-                $('upload').append(text);
+                $('#upload').append(text);
                 $('#accordion').accordion();
                 if(text.indexOf('Done!') == -1) {
                   setTimeout(getLog, 1000); // refresh every 1 seconds
@@ -60,7 +60,7 @@
           %p
         %input{:id => 'info_submit', :type => 'submit', :value => '送出'}
       %h3 員工檔更新上載
-      %form{:action => "/site/upload", :method => "put"}
+      %form{:id => "upload", :action => "/site/upload", :method => "put"}
         %input{:id => "fileupload", :type => "file", :name => "files[]", :enctype => "multipart/form-data"}
 
 #navigation
