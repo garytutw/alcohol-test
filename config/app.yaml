@@ -3,3 +3,5 @@ anomaly_bound: 0.0
 tester_serial: ^(?!1)\d*
 # SiteMgr default can be assigned multiple sites, for operator, you need to add site id below to enable.
 enable_multi_site: [2]
+
+mobile_site: Mobile
