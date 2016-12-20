@@ -168,11 +168,7 @@ class Application
         return '1'
       end
     end
-    code = add_alc(driver, site, timestamp, value, filename)
-    if code == 200
-      '0'
-    else
-      '1'
-    end
+    add_alc(driver, site, timestamp, value, filename)
+    '0'
   end
 end
