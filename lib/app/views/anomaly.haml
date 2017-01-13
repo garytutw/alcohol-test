@@ -14,6 +14,12 @@
         %span 員工編號
       %th{:width => "126"}
         %span 員工姓名
+      %th{:width=> "126"}
+        %span 緯度
+      %th{:width => "126"}
+        %span 經度
+      %th{:width => "140"}
+        %span 檢測地址
       %th{:width => "126"}
         %span 酒測值
     - @tests.each do |t|
@@ -25,7 +31,13 @@
         %td
           %span.driver_name #{t.driver.name}
         %td
+          %span #{"%.4f" % t.latitude if t.latitude}
+        %td
+          %span #{"%.4f" % t.longitude if t.longitude}
+        %td
+          %span #{t.location}
+        %td
           %span #{"%.3f" % t.value}
   #anomaly_photo
     %input{:type => 'button', :value => '列印', :style => 'display:none;text-align:right;'}
-    #anomaly_photo_div 
+    #anomaly_photo_div

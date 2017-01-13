@@ -137,17 +137,52 @@ class Application
     'ID' => :id,
     '檢測結果' => :value,
     '日期' => :date,
-    '時間' => :time
+    '時間' => :time,
+    '緯度' => :latitude,
+    '經度' => :longitude,
+    '檢測地址' => :location
   }
+  def convgeo(dms)
+    d = dms.split('.')
+    d[0].to_f + d[1].to_f/60 + d[2].to_f/3600
+  end
+
+  def add_alcm(driver, site, timestamp, value, filename, latitude, longitude, location)
+    record = Hash.new
+    record[:driver] = driver
+    record[:site] = site
+    record[:time] = timestamp
+    record[:value] = value
+    record[:image] = filename
+    record[:latitude] = latitude if latitude
+    record[:longitude] = longitude if longitude
+    record[:location] = location if location
+    at = AlcoholTest.first({:driver => driver, :site => site, :time => record[:time], :latitude => latitude, :longitude => longitude})
+    if not at
+      at = AlcoholTest.new(record)
+      if at.save
+        check_anomaly(record, Float(@@abncfg["anomaly_bound"]), Regexp.new(@@abncfg["tester_serial"]))
+        return 200
+      else
+        return 500
+      end
+    else
+      return 500
+    end
+  end
+
   post '/addm' do
     data = {}
     body = params['BODY']
     body.split(/\r?\n|\r/).each do |line|
-      m = /^([^\t]+)\t?:(.+)$/.match(line)
-      next if not m
-      next if not mFields[m[1]]
-      data[mFields[m[1]]] = m[2].strip
+      i = line.index(':')
+      next if i == nil
+      name = line[0, i].strip
+      next if not mFields[name]
+      data[mFields[name]] = line[i+1..-1].strip
     end
+    data[:latitude] = convgeo(data[:latitude]) if data[:latitude]
+    data[:longitude] = convgeo(data[:longitude]) if data[:longitude]
     site = Site.first_or_create({:name => @@abncfg["mobile_site"].strip}, {:seq => 1})
     driver = Driver.first_or_create({:serial => data[:id]})
     timestamp = "#{data[:date].gsub(/\//, '-')}T#{data[:time]}+08:00"
@@ -168,7 +203,7 @@ class Application
         return '1'
       end
     end
-    add_alc(driver, site, timestamp, value, filename)
+    add_alcm(driver, site, timestamp, value, filename, data[:latitude], data[:longitude], data[:location])
     '0'
   end
 end

@@ -31,7 +31,7 @@
           tag.html(data).dialog({
             modal: true,
             title: site + ' 酒測超標清單 ' + date,
-            width: 350,
+            width: 450,
             close: function() {
               $(this).remove();
             },
@@ -76,7 +76,7 @@
       %h2{:style => "position: relative;"}
         %span 統聯酒測日報表
         %input{:id => "datepicker", :disabled => "disabled", :value => @date}
-        %input{:id => "print", :type => "button", :style => "position: absolute; right: 0px;", :value => "列印"}  
+        %input{:id => "print", :type => "button", :style => "position: absolute; right: 0px;", :value => "列印"}
     %table{:width => "100%"}
       %tr{:valign => "top"}
         %th{:width => "35"}
@@ -88,7 +88,7 @@
         %th{:width => "100"}
           %span 受測總數
         %th{:width => "100"}
-          %span 異常次數 
+          %span 異常次數
         %th{:width => "100"}
           %span 調度測試
         %th{:width => "100"}
@@ -116,7 +116,7 @@
               - if r.anomaly_tests > 0
                 %a{:class => "anomaly", :href => "/anomaly/#{r.site_id}/#{@date}"}= r.anomaly_tests
               - else
-                = r.anomaly_tests 
+                = r.anomaly_tests
           %td
             %span= r.status == 0 ? "N/A" : r.operator_tests
           %td
@@ -134,7 +134,7 @@
           %td
             %span{:style=>"white-space:nowrap"} #{r.comment}
           %td.update_column
-            %span  
+            %span
               %a{:href => "/site/#{r.site_id}/#{@date}"} 更新
     #print_footer
       %span 批示______________&nbsp;&nbsp;
@@ -147,7 +147,7 @@
       %li
         %a{:href => "/search"} 搜尋
       %li
-        %a{:href => "/broadcast"} 站務系統  
+        %a{:href => "/broadcast"} 站務系統
       - @available_dates.each do |d|
         %li
           %a{:href => "/report/#{d}", :class => d == @date.to_s && "selected"}= d
