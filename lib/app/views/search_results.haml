@@ -1,3 +1,10 @@
+:javascript
+  $(function() {
+    $("a.geo").click(function(e) {
+      e.preventDefault();
+      window.open($(this).attr('href'), "_blank");
+    })
+  });
 != paginate @result, items_per_page: 20, labels: {first: '«', last: '»'}, renderer: 'haml'
 %table{:width => "100%"}
   %tr{:valign => "top"}
@@ -9,6 +16,11 @@
       %span 員工姓名
     %th{:width => "126"}
       %span 酒測值
+    %th{:width=> "170"}
+      %span 檢測地點
+    %th{:width => "170"}
+      %span 檢測區域
+
   - @tests.each do |t|
     %tr{:valiagn => "top", :image => t.image}
       %td
@@ -19,7 +31,11 @@
         %span.driver_name #{t.driver.name}
       %td
         %span #{"%.3f" % t.value}
+      %td
+        - if t.latitude and t.longitude
+          %a{:class => "geo", :href =>"https://www.google.com/maps/place/#{"%.4f"%t.latitude}+#{"%.4f"%t.longitude}/@#{"%.4f"%t.latitude},#{"%.4f"%t.longitude},15z"} #{"%.4f"%t.latitude},#{"%.4f"%t.longitude}
+      %td
+        %span #{t.location}
 %div.photo
   %div.driver_id
   %div.photo_div
-  

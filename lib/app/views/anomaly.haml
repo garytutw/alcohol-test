@@ -14,14 +14,12 @@
         %span 員工編號
       %th{:width => "126"}
         %span 員工姓名
-      %th{:width=> "126"}
-        %span 緯度
-      %th{:width => "126"}
-        %span 經度
-      %th{:width => "140"}
-        %span 檢測地址
       %th{:width => "126"}
         %span 酒測值
+      %th{:width=> "170"}
+        %span 檢測地點
+      %th{:width => "170"}
+        %span 檢測區域
     - @tests.each do |t|
       %tr{:valiagn => "top", :image => t.image}
         %td
@@ -31,13 +29,12 @@
         %td
           %span.driver_name #{t.driver.name}
         %td
-          %span #{"%.4f" % t.latitude if t.latitude}
+          %span #{"%.3f" % t.value}
         %td
-          %span #{"%.4f" % t.longitude if t.longitude}
+          - if t.latitude and t.longitude
+            %a{:class => "geo", :target => "_blank", :href =>"https://www.google.com/maps/place/#{"%.4f"%t.latitude}+#{"%.4f"%t.longitude}/@#{"%.4f"%t.latitude},#{"%.4f"%t.longitude},15z"} #{"%.4f"%t.latitude},#{"%.4f"%t.longitude}
         %td
           %span #{t.location}
-        %td
-          %span #{"%.3f" % t.value}
   #anomaly_photo
     %input{:type => 'button', :value => '列印', :style => 'display:none;text-align:right;'}
     #anomaly_photo_div
