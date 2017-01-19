@@ -17,9 +17,9 @@ def get_recipients site_id
     SiteNotifier.all(:site_id => site_id).each do |notify|
       cclist += notify.email + ","
     end
-    cclist.chomp(",")  
+    cclist.chomp(",")
 end
-  
+
 def check_anomaly(record, limit, rule)
     puts "[Debug] Checking anomaly rules: record[:value] > limit => #{record[:value] > limit} && !!(record[:driver].serial.to_s =~ rule) => #{!!(record[:driver].serial.to_s =~ rule)}"
     begin
@@ -28,7 +28,7 @@ def check_anomaly(record, limit, rule)
         @email = Mail.new do
           from    'alcoholtest@ubus.com.tw'
           to      get_recipients record[:site].id
-          subject "[異常酒精檢測結果] 員工編號:#{record[:driver].serial} 員工姓名:#{record[:driver].name}" + 
+          subject "[異常酒精檢測結果] 員工編號:#{record[:driver].serial} 員工姓名:#{record[:driver].name}" +
           " 檢測結果:#{record[:value]} 日期時間:#{record[:time]} 檢測地點:#{record[:site].name}"
           text_part do
             content_type 'text/plain; charset=UTF-8'
@@ -42,21 +42,27 @@ def check_anomaly(record, limit, rule)
     rescue Exception => e
       # do nothing ~
       print "Error sending anomaly email at " + Time.now.to_s + "::: " + e.message + "\n"
-    end  
-end  
+    end
+end
+
+def convgeo(dms)
+  d = dms.split('.')
+  d[0].to_f + d[1].to_f/60 + d[2].to_f/3600
+end
+
 def mail_handler mail
   begin
     begin
       body = mail.text_part.decoded
     rescue Exception => e
       raise "Unable to parse mail body with subject: #{mail.subject}"
-    end      
+    end
       record = Hash.new
       tester = Hash.new
       tmp = []
-      
+
       body.each_line do |l|
-        r = l.split(':')  
+        r = l.split(':')
         r.each {|v| v.strip!} # remove empty trail
         case r[0]
         when '員工編號'
@@ -69,11 +75,20 @@ def mail_handler mail
           if r[0] == '日期' then tmp[0] = r[1]
           else tmp[1] = r[1] + ':' + r[2] + ':' + r[3]
           end
-          if tmp.length == 2    
+          if tmp.length == 2
             record[:time] = Time.parse(tmp[0] + ' ' + tmp[1])
-          end  
+          end
+        when '緯度'
+          record[:latitude] = convgeo(r[1])
+        when '經度'
+          record[:longitude] = convgeo(r[1])
         when '檢測地點'
-          record[:site] = Site.first_or_create({ :name => r[1]}, { :seq => 1})  
+          if record[:latitude] then
+            record[:site] = Site.first_or_create({:name => @abncfg["mobile_site"].strip}, {:seq => 1})
+            record[:location] = r[1]
+          else
+            record[:site] = Site.first_or_create({ :name => r[1]}, { :seq => 1})
+          end
         else
           puts "[MAIL] Bad email content which contains: #{r[0]} \n"
           # raise "Bad email content which contains: #{r[0]} \n"
@@ -95,7 +110,7 @@ def mail_handler mail
             bg.annotate(txt, 0, 0, 0, 0, "酒測值: #{"%.3f" % record[:value].to_f}") {
               txt.font = 'lib/app/fonts/DroidSansFallback.ttf'
               txt.gravity = Magick::CenterGravity
-              txt.pointsize = 30 
+              txt.pointsize = 30
               txt.stroke = 'transparent'
               txt.fill = '#ff0000'
               txt.font_weight = Magick::BoldWeight
@@ -107,32 +122,32 @@ def mail_handler mail
           end
         end
       end # end attachment
-   
+
       #record[:driver] = Driver.first_or_create(tester)
       the_driver = Driver.first_or_create({:serial =>  tester[:serial]}, {:name =>  tester[:name]}) # require serial match only
       if (the_driver.name != tester[:name]) # client typing error
         puts "Driver with serial #{tester[:serial]} name does not match, update to: #{tester[:name]}"
         the_driver.update(:name => tester[:name])
       end
-      record[:driver] = the_driver 
-      record[:image] = filename  
+      record[:driver] = the_driver
+      record[:image] = filename
       # puts "[DB] Inserting alcohol test record: #{record}"
       at = AlcoholTest.new(record)
       if at.save
         # check anomaly of this received mail
-        check_anomaly(record, Float(@abncfg["anomaly_bound"]), Regexp.new(@abncfg["tester_serial"]))   
-  
+        check_anomaly(record, Float(@abncfg["anomaly_bound"]), Regexp.new(@abncfg["tester_serial"]))
+
         if @config['delete_from_server']
           mail.mark_for_delete = true    # delete the mail from server
         end
       else
         raise "Unable to save alcohol test record: #{at.errors.full_messages }"
-      end     
+      end
     rescue Exception => e
       # [Todo] save maleformat email to file for further processing ~
       mail.skip_deletion
       print "Error receiving email at " + Time.now.to_s + "::: " + e.message + "\n"
-      #next   
+      #next
     end
 end
 
@@ -146,7 +161,7 @@ end
 
 desc 'Receiving alcohol tests from POP3 server'
 task :receive do
-  
+
   config = YAML.load_file('config/mail.yaml')
   Mail.defaults do
     retriever_method :pop3,
@@ -156,11 +171,11 @@ task :receive do
       :password   => config["password"],
       :enable_ssl => config["enable_ssl"]
   end
-  
+
   puts "Mail server connected, start to check new mails ..."
   Mail.find_and_delete(:count => 'ALL', :what => :first, :order => :asc, :keys => MAIL_SUBJECT_KEYWORD) { |themail|
     themail.mark_for_delete = false
-    mail_handler themail 
+    mail_handler themail
   } #end
   puts 'Done! No more mail found!'
 end
