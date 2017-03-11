@@ -1,7 +1,7 @@
 # encoding: utf-8
 require_relative '../app/models/init'
 require 'mail'
-require 'rmagick'
+require 'RMagick'
 
 MAIL_SUBJECT_KEYWORD = '[酒精檢測結果]'
 IMG_DIR = 'photos'

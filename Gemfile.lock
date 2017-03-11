@@ -86,7 +86,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (10.1.0)
+    rake (12.0.0)
     rmagick (2.13.2)
     sinatra (1.3.6)
       rack (~> 1.4)
@@ -132,7 +132,7 @@ DEPENDENCIES
   json
   mail (= 2.5.4)
   rack (= 1.5.2)
-  rake (= 10.1.0)
+  rake (= 12.0.0)
   rmagick (= 2.13.2)
   sinatra (= 1.3.6)
   sinatra-contrib (= 1.3.2)
