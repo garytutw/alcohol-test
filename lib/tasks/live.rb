@@ -2,8 +2,8 @@
 namespace :live do
   desc 'Start production process on [port]'
   task :start, [:port] do |t, args|
-    system "/usr/bin/ruby1.9.1 -E utf-8:utf-8 /usr/local/bin/thin -C config/thin-production.yaml -o #{args.port} start" if args.port
-    system '/usr/bin/ruby1.9.1 -E utf-8:utf-8 /usr/local/bin/thin -C config/thin-production.yaml start' unless args.port
+    system "thin -C config/thin-production.yaml -o #{args.port} start" if args.port
+    system 'thin -C config/thin-production.yaml start' unless args.port
   end
 
   desc 'Stop production process on [port]'
@@ -23,4 +23,3 @@ namespace :live do
     system 'netstat -tnlp 2>/dev/null | grep thin'
   end
 end
-

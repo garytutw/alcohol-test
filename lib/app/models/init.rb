@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
-require 'sinatra/flash' 
+require 'sinatra/flash'
 Bundler.require
 
 # Models
@@ -16,7 +16,7 @@ require_relative 'site_notifier'
 DataMapper.finalize
 
 class Application < Sinatra::Base
-	
+
   puts ">> Running in #{settings.environment} environment"
 
   configure :development do
@@ -33,7 +33,9 @@ class Application < Sinatra::Base
 
   configure :production do
     Bundler.require :production
-    cfg = YAML.load_file('config/production.yaml')
+		use Rack::CommonLogger
+    DataMapper::Logger.new($stdout, :debug)
+		cfg = YAML.load_file('config/production.yaml')
     DataMapper.setup :default, cfg['DATABASE_URL']
   end
 

@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra/base'
+require 'sinatra/contrib'
 Bundler.require
 require_relative './models/init.rb'
 
@@ -13,7 +14,7 @@ end
 Dir["#{root_dir}/helpers/*.rb"].each {|f| require_relative f}
 
 class Application < Sinatra::Base
-
+  register Sinatra::Contrib
   ## Sinatra Settings ##
   # http://www.sinatrarb.com/configuration.html
   #enable :sessions
@@ -22,7 +23,7 @@ class Application < Sinatra::Base
   helpers Helpers
   helpers Sinatra::JSON
   register Sinatra::Flash
-	
+
 	# define ACL routing condition
 	set(:auth) do |*roles|   # <- notice the splat here
 	  condition do
@@ -42,4 +43,3 @@ end
 
 # Routes
 Dir["#{root_dir}/routes/*.rb"].each {|f| require_relative f}
-
