@@ -1,4 +1,7 @@
 #encoding: utf-8
+
+require 'json'
+
 class Application
   @@news = Hash.try_convert(YAML.load_file('config/broadcast.yaml'))
   def available_dates(site)
