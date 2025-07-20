@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'RMagick'
+require 'rmagick'
 require 'mail'
 require 'securerandom'
 
